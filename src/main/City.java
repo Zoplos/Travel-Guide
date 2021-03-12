@@ -13,7 +13,6 @@ import wikipedia.MediaWiki;
 
 public class City {
 	
-	//private String appid ="f6dcc229d7417350c66a4ebd183e128c";
 	private String name;
 	private String country;
 	private int terms_vector[];
@@ -54,17 +53,28 @@ public class City {
 	
 	public void RetrieveData(String name, String country, String appid, int[] terms_vector, double[] geodesic_vector) throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);
-		//System.out.println(name+" temperature: " + (weather_obj.getMain()).getTemp());
+		
+		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);		
+		
 		System.out.println(name+" lat: " + weather_obj.getCoord().getLat()+" lon: " + weather_obj.getCoord().getLon());
+		
 		MediaWiki mediaWiki_obj =  mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&titles="+name+"&format=json&formatversion=2"),MediaWiki.class);
-		//System.out.println(name+" Wikipedia article: "+mediaWiki_obj.getQuery().getPages().get(0).getExtract());
+		
 		String article = mediaWiki_obj.getQuery().getPages().get(0).getExtract();
 		
 		geodesic_vector[0] = weather_obj.getCoord().getLat();
 		geodesic_vector[1] = weather_obj.getCoord().getLon();
 		
-		terms_vector[0] = countCriterionfCity(article, "mountain");
+		terms_vector[0] = countCriterionfCity(article, "cafe");
+		terms_vector[1] = countCriterionfCity(article, "sea");
+		terms_vector[2] = countCriterionfCity(article, "museum");
+		terms_vector[3] = countCriterionfCity(article, "restaurant");
+		terms_vector[4] = countCriterionfCity(article, "stadium");
+		terms_vector[5] = countCriterionfCity(article, "cinema");
+		terms_vector[6] = countCriterionfCity(article, "mountain");
+		terms_vector[7] = countCriterionfCity(article, "lake");
+		terms_vector[8] = countCriterionfCity(article, "river");
+		terms_vector[9] = countCriterionfCity(article, "bar");
 	}
 	
 	public static int countCriterionfCity(String cityArticle, String criterion) {
