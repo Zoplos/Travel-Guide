@@ -56,17 +56,17 @@ public class City {
 		
 		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);		
 		
-		System.out.println(name+" lat: " + weather_obj.getCoord().getLat()+" lon: " + weather_obj.getCoord().getLon());
+		System.out.println(name+" lat: " + weather_obj.getCoord().getLat()+" lon: " + weather_obj.getCoord().getLon()); //Για να ελέγξω την ορθότητα των δεδομένων lat & lon
 		
 		MediaWiki mediaWiki_obj =  mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&titles="+name+"&format=json&formatversion=2"),MediaWiki.class);
 		
-		String article = mediaWiki_obj.getQuery().getPages().get(0).getExtract();
+		String article = mediaWiki_obj.getQuery().getPages().get(0).getExtract(); 
 		
-		geodesic_vector[0] = weather_obj.getCoord().getLat();
+		geodesic_vector[0] = weather_obj.getCoord().getLat();         //Γέμισμα πίνακα με coordinates της πόλης
 		geodesic_vector[1] = weather_obj.getCoord().getLon();
 		
-		terms_vector[0] = countCriterionfCity(article, "cafe");
-		terms_vector[1] = countCriterionfCity(article, "sea");
+		terms_vector[0] = countCriterionfCity(article, "cafe");       //Γέμισμα πίνακα με τον int που αναλογεί στο πόσες φορές   
+		terms_vector[1] = countCriterionfCity(article, "sea");        //  βρέθηκε το criterion
 		terms_vector[2] = countCriterionfCity(article, "museum");
 		terms_vector[3] = countCriterionfCity(article, "restaurant");
 		terms_vector[4] = countCriterionfCity(article, "stadium");
