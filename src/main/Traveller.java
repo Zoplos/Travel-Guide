@@ -56,8 +56,8 @@ public abstract class Traveller {
 		terms_vector[9] = 5;
 	}
 	
-	private void Calculate_similarity( ) {
+	//private void Calculate_similarity(Object City) {}
 				
-	}
+	
 	
 }
