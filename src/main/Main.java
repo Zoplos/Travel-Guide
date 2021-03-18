@@ -45,8 +45,9 @@ public class Main {
 			
 		}
 				
-		YoungTraveller traveller = new YoungTraveller("John",123,new int[10],new double[2]);
+		MiddleTraveller traveller = new MiddleTraveller("John",123,new int[10],new double[2]);
 		traveller.fillWithData(traveller.getTerms_vector(), traveller.getGeodesic_vector());
 		System.out.println(traveller.calculate_similarity(city1, traveller, 0));
+		System.out.println(traveller.calculate_similarity(city2, traveller, 1));
 	}
 }

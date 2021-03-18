@@ -12,7 +12,7 @@ public class MiddleTraveller extends Traveller {
 		return result;
 	}
 
-	public double similarity_terms_vector(Traveller traveller, City city) {
+	private double similarity_terms_vector(Traveller traveller, City city) {
 		double x = 0; // x = σειρά αριθμητή
 		double y = 0; // y = σειρα traveller terms vector
 		double z = 0; // z = σειρά city terms_vector
