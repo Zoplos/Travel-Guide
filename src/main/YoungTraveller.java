@@ -7,7 +7,12 @@ public class YoungTraveller extends Traveller{
 		// TODO Auto-generated constructor stub
 	}		
 	
-	public double similarity_terms_vector(YoungTraveller traveller, City city) {
+	public double calculate_similarity(City city,Traveller traveller,double p) {
+		double result = p * similarity_terms_vector(traveller,city) + (1-p) * traveller.similarity_geodesic_vector(traveller, city);
+		return result;
+	}	
+	
+	private double similarity_terms_vector(Traveller traveller, City city) {
 		double x=0;
 		
 		for(int i=0;i<city.getTerms_vector().length;i++) {

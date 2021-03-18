@@ -25,11 +25,9 @@ public class Main {
 			if(i != 9) {
 				System.out.print(city1.getTerms_vector()[i] + ",");
 			} else {
-				System.out.print(city1.getTerms_vector()[i]);
+				System.out.print(city1.getTerms_vector()[i] + "\n");
 			}
 		}
-		
-		System.out.println("");
 				
 		City city2 = new City("Berlin","de",new int[10],new double[2]);
 		city2.RetrieveData(city2.getName(), city2.getCountry(),appid,city2.getTerms_vector(),city2.getGeodesic_vector());
@@ -42,9 +40,13 @@ public class Main {
 			if(i != 9) {
 				System.out.print(city2.getTerms_vector()[i] + ",");
 			} else {
-				System.out.print(city2.getTerms_vector()[i]);
+				System.out.print(city2.getTerms_vector()[i] + "\n");
 			}
 			
 		}
+				
+		YoungTraveller traveller = new YoungTraveller("John",123,new int[10],new double[2]);
+		traveller.fillWithData(traveller.getTerms_vector(), traveller.getGeodesic_vector());
+		System.out.println(traveller.calculate_similarity(city1, traveller, 0));
 	}
 }
