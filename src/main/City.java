@@ -3,6 +3,7 @@ package main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Comparator;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -11,19 +12,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import weather.OpenWeatherMap;
 import wikipedia.MediaWiki;
 
-public class City {
+public class City{
 	
 	private String name;
 	private String country;
 	private int terms_vector[];
 	private double geodesic_vector[];
+	private double similarity;
 	
 	public City(String name, String country, int[] terms_vector, double[] geodesic_vector) {
 		super();
 		this.name = name;
 		this.country = country;
 		this.terms_vector = terms_vector;
-		this.geodesic_vector = geodesic_vector;
+		this.geodesic_vector = geodesic_vector;		
 	}
 	
 	public String getName() {
@@ -50,7 +52,15 @@ public class City {
 	public void setGeodesic_vector(double[] geodesic_vector) {
 		this.geodesic_vector = geodesic_vector;
 	}
-	
+		
+	public double getSimilarity() {
+		return similarity;
+	}
+
+	public void setSimilarity(double similarity) {
+		this.similarity = similarity;
+	}
+
 	public void RetrieveData(String name, String country, String appid, int[] terms_vector, double[] geodesic_vector) throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -88,5 +98,18 @@ public class City {
 		}
 		return count;
 	}
+
+	public static Comparator<City> CitySimComparator = new Comparator<City>() {
+
+		@Override
+		public int compare(City c1, City c2) {
+			double citySim1 = c1.getSimilarity();
+			double citySim2 = c2.getSimilarity();
+			return Double.compare(citySim2, citySim1);
+		}
+		
+	};
+	
+	
 	
 }

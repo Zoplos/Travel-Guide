@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public abstract class Traveller {
 	
 	private String name;
@@ -81,6 +84,11 @@ public abstract class Traveller {
 			
 			return (dist);  //Γυρνάει κατευθείαν σε χιλιόμετρα
 		}
+	}		
+	
+	public City compare_cities(ArrayList<City> cities) {
+		Collections.sort(cities,City.CitySimComparator);
+		return cities.get(0);
 	}
-			
+	
 }
