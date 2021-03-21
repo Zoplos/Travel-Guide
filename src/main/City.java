@@ -61,7 +61,7 @@ public class City{
 		this.similarity = similarity;
 	}
 
-	public void RetrieveData(String name, String country, String appid, int[] terms_vector, double[] geodesic_vector) throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
+	public void RetrieveData(String appid) throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);		

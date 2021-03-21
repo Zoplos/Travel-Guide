@@ -91,4 +91,17 @@ public abstract class Traveller {
 		return cities.get(0);
 	}
 	
+	public ArrayList<City> compare_cities(ArrayList<City> cities,int max){
+		ArrayList<City> test = new ArrayList<City>();
+		if(max<2 || max>5) {
+			System.out.println("The integer given must be [2,5]");
+			return null;
+		} else {
+			for(int i=2;i<max;i++) {
+				test.add(cities.get(i));
+			}
+			return test;
+		}				
+	}
+	
 }
