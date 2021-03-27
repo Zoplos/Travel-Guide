@@ -21,8 +21,18 @@ public class YoungTraveller extends Traveller{
 		}
 		
 		double result = 1/(1 + Math.sqrt(x));
-		
 		return result;
+	}
+	
+	@Override
+	public int compareTo(Traveller arg0) {
+		if(this.similarity>arg0.similarity) {
+			return -1;
+		} else if (this.similarity<arg0.similarity) {
+			return 1;
+		} else {
+			return 0;
+		}		
 	}
 		
 }

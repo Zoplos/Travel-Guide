@@ -3,12 +3,13 @@ package main;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class Traveller {
+public abstract class Traveller implements Comparable<Traveller>{
 	
 	private String name;
 	private int phone;
 	private int terms_vector[];
 	private double geodesic_vector[];
+	protected double similarity;
 	
 	public Traveller(String name, int phone, int[] terms_vector, double[] geodesic_vector) {
 		super();
@@ -42,7 +43,15 @@ public abstract class Traveller {
 	public void setGeodesic_vector(double[] geodesic_vector) {
 		this.geodesic_vector = geodesic_vector;
 	}
-	
+		
+	public double getSimilarity() {
+		return similarity;
+	}
+
+	public void setSimilarity(double similarity) {
+		this.similarity = similarity;
+	}
+
 	public void fillWithData(int[] terms_vector, double[] geodesic_vector){
 		geodesic_vector[0] = 52.5244;
 		geodesic_vector[1] = 13.4105;
@@ -87,7 +96,7 @@ public abstract class Traveller {
 	}		
 	
 	public City compare_cities(ArrayList<City> cities) {
-		Collections.sort(cities,City.CitySimComparator);
+		Collections.sort(cities);
 		return cities.get(0);
 	}
 	
@@ -97,7 +106,7 @@ public abstract class Traveller {
 			System.out.println("The integer given must be [2,5]");
 			return null;
 		} else {
-			for(int i=2;i<max;i++) {
+			for(int i=1;i<max;i++) {
 				test.add(cities.get(i));
 			}
 			return test;

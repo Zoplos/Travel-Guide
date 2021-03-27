@@ -27,4 +27,15 @@ public class MiddleTraveller extends Traveller {
 		return result;
 	}
 	
+	@Override
+	public int compareTo(Traveller arg0) {
+		if(this.similarity>arg0.similarity) {
+			return -1;
+		} else if (this.similarity<arg0.similarity) {
+			return 1;
+		} else {
+			return 0;
+		}		
+	}
+	
 }

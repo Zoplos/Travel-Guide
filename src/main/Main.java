@@ -35,7 +35,7 @@ public class Main {
 		City city5 = new City("Amsterdam","nl",new int[10],new double[2]);
 		city5.RetrieveData(appid);
 		
-		City city6 = new City("Kyoto","jp",new int[10],new double[2]);
+		City city6 = new City("Paris","fr",new int[10],new double[2]);
 		city6.RetrieveData(appid);
 		
 		ArrayList<City> cities = new ArrayList<City>();
@@ -47,28 +47,53 @@ public class Main {
 		cities.add(city6);
 							
 		YoungTraveller traveller = new YoungTraveller("John",123,new int[10],new double[2]);
+		MiddleTraveller traveller1 = new MiddleTraveller("Jason",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917});
+		ElderTraveller traveller2 = new ElderTraveller("Nick",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257});
 		traveller.fillWithData(traveller.getTerms_vector(), traveller.getGeodesic_vector());		
+		
+		ArrayList<Traveller> travellers = new ArrayList<Traveller>();
+		travellers.add(traveller);
+		travellers.add(traveller1);
+		travellers.add(traveller2);
+		
+		System.out.println("\nSimilarity of certain city for all Travellers:\n");
+		for(int i=0;i<travellers.size();i++) {
+			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
+			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
+		}
+		
+		Collections.sort(travellers);
+		
+		System.out.println("\nSorted similarity of certain city for all Travellers:\n");
+		for(int i=0;i<travellers.size();i++) {			
+			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
+		}
 		
 		for(int k = 0; k<cities.size();k++) {
 			cities.get(k).setSimilarity(traveller.calculate_similarity(cities.get(k), traveller, 0.2));
 		}
 				
-		System.out.println("\nSimilarity of each city:\n");
+		System.out.println("\nSimilarity of each city for Young Traveller:\n");
 		for(int k = 0; k<cities.size();k++) {
 			System.out.println(cities.get(k).getSimilarity() + " " +cities.get(k).getName());
-		}				
+		}
 		
-		Collections.sort(cities,City.CitySimComparator);
+		Collections.sort(cities);
 		
-		System.out.println("\nSorted similarity of each city:\n");
+		System.out.println("\nSorted similarity of each city for Young Traveller:\n");
 		for(int k = 0; k<cities.size();k++) {
 			System.out.println(cities.get(k).getSimilarity() + " " +cities.get(k).getName());
 		} 
+		
+		System.out.println("\nCompare cities results:\n");
 				
 		System.out.println(traveller.compare_cities(cities).getName());
-		ArrayList<City> test2 = traveller.compare_cities(cities, 3);
-		System.out.println(test2.get(0).getName());
-
+		ArrayList<City> test2 = traveller.compare_cities(cities, 5);
+		
+		for(int i = 0; i<test2.size();i++) {
+			System.out.println(test2.get(i).getName());
+		}
+		
 	}
 	
 }

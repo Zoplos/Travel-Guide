@@ -3,7 +3,6 @@ package main;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Comparator;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -12,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import weather.OpenWeatherMap;
 import wikipedia.MediaWiki;
 
-public class City{
+public class City implements Comparable<City>{
 	
 	private String name;
 	private String country;
@@ -99,7 +98,7 @@ public class City{
 		return count;
 	}
 
-	public static Comparator<City> CitySimComparator = new Comparator<City>() {
+	/*public static Comparator<City> CitySimComparator = new Comparator<City>() {
 
 		@Override
 		public int compare(City c1, City c2) {
@@ -108,7 +107,18 @@ public class City{
 			return Double.compare(citySim2, citySim1);
 		}
 		
-	};
+	};*/
+
+	@Override
+	public int compareTo(City arg0) {
+		if(this.similarity>arg0.similarity) {
+			return -1;
+		} else if (this.similarity<arg0.similarity) {
+			return 1;
+		} else {
+			return 0;
+		}		
+	}
 	
 	
 	
