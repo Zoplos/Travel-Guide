@@ -52,23 +52,6 @@ public abstract class Traveller implements Comparable<Traveller>{
 		this.similarity = similarity;
 	}
 
-	public void fillWithData(int[] terms_vector, double[] geodesic_vector){
-		geodesic_vector[0] = 52.5244;
-		geodesic_vector[1] = 13.4105;
-		
-		terms_vector[0] = 0;
-		terms_vector[1] = 27;
-		terms_vector[2] = 41;
-		terms_vector[3] = 4;
-		terms_vector[4] = 1;
-		terms_vector[5] = 3;
-		terms_vector[6] = 0;
-		terms_vector[7] = 6;
-		terms_vector[8] = 15;
-		terms_vector[9] = 11;
-		
-	}
-	
 	public abstract double calculate_similarity(City city,Traveller traveller,double p);
 	
 	protected double similarity_geodesic_vector(Traveller traveller, City city) {

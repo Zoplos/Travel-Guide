@@ -98,17 +98,6 @@ public class City implements Comparable<City>{
 		return count;
 	}
 
-	/*public static Comparator<City> CitySimComparator = new Comparator<City>() {
-
-		@Override
-		public int compare(City c1, City c2) {
-			double citySim1 = c1.getSimilarity();
-			double citySim2 = c2.getSimilarity();
-			return Double.compare(citySim2, citySim1);
-		}
-		
-	};*/
-
 	@Override
 	public int compareTo(City arg0) {
 		if(this.similarity>arg0.similarity) {

@@ -46,10 +46,9 @@ public class Main {
 		cities.add(city5);
 		cities.add(city6);
 							
-		YoungTraveller traveller = new YoungTraveller("John",123,new int[10],new double[2]);
+		YoungTraveller traveller = new YoungTraveller("John",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105});
 		MiddleTraveller traveller1 = new MiddleTraveller("Jason",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917});
-		ElderTraveller traveller2 = new ElderTraveller("Nick",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257});
-		traveller.fillWithData(traveller.getTerms_vector(), traveller.getGeodesic_vector());		
+		ElderTraveller traveller2 = new ElderTraveller("Nick",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257});	
 		
 		ArrayList<Traveller> travellers = new ArrayList<Traveller>();
 		travellers.add(traveller);
@@ -59,13 +58,6 @@ public class Main {
 		System.out.println("\nSimilarity of certain city for all Travellers:\n");
 		for(int i=0;i<travellers.size();i++) {
 			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
-			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
-		}
-		
-		Collections.sort(travellers);
-		
-		System.out.println("\nSorted similarity of certain city for all Travellers:\n");
-		for(int i=0;i<travellers.size();i++) {			
 			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
 		}
 		
@@ -94,6 +86,14 @@ public class Main {
 			System.out.println(test2.get(i).getName());
 		}
 		
+		System.out.println("\nFree ticket to Tokyo, polymorphism example:\n");
+		for(int i=0;i<travellers.size();i++) {
+			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
+			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
+		}
+		Collections.sort(travellers);
+		System.out.println("\nFree ticket to Tokyo goes to: " + travellers.get(0).getName());
+				
 	}
 	
 }
