@@ -52,7 +52,7 @@ public abstract class Traveller implements Comparable<Traveller>{
 		this.similarity = similarity;
 	}
 
-	public abstract double calculate_similarity(City city,Traveller traveller,double p);
+	public abstract double calculate_similarity(City city,Traveller traveller,double p);	
 	
 	protected double similarity_geodesic_vector(Traveller traveller, City city) {
 		double maxdist = 15_317;

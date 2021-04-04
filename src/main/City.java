@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import exceptions.WikipediaException;
 import weather.OpenWeatherMap;
 import wikipedia.MediaWiki;
 
@@ -60,7 +61,7 @@ public class City implements Comparable<City>{
 		this.similarity = similarity;
 	}
 
-	public void RetrieveData(String appid) throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
+	public void RetrieveData(String appid) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {
 		ObjectMapper mapper = new ObjectMapper();
 		
 		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);		
@@ -73,7 +74,7 @@ public class City implements Comparable<City>{
 		
 		geodesic_vector[0] = weather_obj.getCoord().getLat();         //Γέμισμα πίνακα με coordinates της πόλης
 		geodesic_vector[1] = weather_obj.getCoord().getLon();
-		
+			
 		terms_vector[0] = countCriterionfCity(article, "cafe");       //Γέμισμα πίνακα με τον int που αναλογεί στο πόσες φορές   
 		terms_vector[1] = countCriterionfCity(article, "sea");        //  βρέθηκε το criterion
 		terms_vector[2] = countCriterionfCity(article, "museum");

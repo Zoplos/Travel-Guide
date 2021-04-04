@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+
+import exceptions.AgeException;
+import exceptions.WikipediaException;
 
 /* TODO: CLEAN UP MAIN PLS WHAT IS THIS, 
  * maybe consider making terms and geodesic vectors 
@@ -16,7 +20,9 @@ public class Main {
 	
 	
 	
-	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException {
+	private static Scanner scanner;
+
+	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException {
 		
 		String appid = "f6dcc229d7417350c66a4ebd183e128c";
 		
@@ -93,6 +99,18 @@ public class Main {
 		}
 		Collections.sort(travellers);
 		System.out.println("\nFree ticket to Tokyo goes to: " + travellers.get(0).getName());
+		
+		
+		scanner = new Scanner(System.in);
+		System.out.println("Please enter your age: ");
+		int age = scanner.nextInt();
+		if(age>=16 && age<=25) {
+			System.out.println("TODO: add young traveller");
+		} else if(age>25 && age <=60) {
+			System.out.println("TODO: add middle traveller");
+		} else if(age>60 && age<=115) {
+			System.out.println("TODO: add elder traveller");
+		} else throw new AgeException();
 				
 	}
 	
