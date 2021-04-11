@@ -61,7 +61,8 @@ public class City implements Comparable<City>{
 		this.similarity = similarity;
 	}
 
-	public void RetrieveData(String appid) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {
+	public void RetrieveData() throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {
+		String appid = "f6dcc229d7417350c66a4ebd183e128c";
 		ObjectMapper mapper = new ObjectMapper();
 		
 		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);		

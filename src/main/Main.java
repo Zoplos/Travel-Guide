@@ -12,10 +12,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import exceptions.AgeException;
 import exceptions.WikipediaException;
 
-/* TODO: CLEAN UP MAIN PLS WHAT IS THIS, 
- * maybe consider making terms and geodesic vectors 
- * vector elements instead of arrays*/
-
 public class Main {
 	
 	
@@ -24,25 +20,24 @@ public class Main {
 
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException {
 		
-		String appid = "f6dcc229d7417350c66a4ebd183e128c";
 		
 		City city1 = new City("Athens","gr",new int[10],new double[2]);
-		city1.RetrieveData(appid);
+		city1.RetrieveData();
 		
 		City city2 = new City("Berlin","de",new int[10],new double[2]);
-		city2.RetrieveData(appid);
+		city2.RetrieveData();
 		
 		City city3 = new City("Tokyo","jp",new int[10],new double[2]);
-		city3.RetrieveData(appid);
+		city3.RetrieveData();
 		
 		City city4 = new City("London","uk",new int[10],new double[2]);
-		city4.RetrieveData(appid);
+		city4.RetrieveData();
 		
 		City city5 = new City("Amsterdam","nl",new int[10],new double[2]);
-		city5.RetrieveData(appid);
+		city5.RetrieveData();
 		
 		City city6 = new City("Paris","fr",new int[10],new double[2]);
-		city6.RetrieveData(appid);
+		city6.RetrieveData();
 		
 		ArrayList<City> cities = new ArrayList<City>();
 		cities.add(city1);
@@ -111,7 +106,7 @@ public class Main {
 		} else if(age>60 && age<=115) {
 			System.out.println("TODO: add elder traveller");
 		} else throw new AgeException();
-				
+		
 	}
 	
 }
