@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import exceptions.AgeException;
 import exceptions.WikipediaException;
+
 
 public class Main {
 	
@@ -97,7 +102,7 @@ public class Main {
 		
 		
 		scanner = new Scanner(System.in);
-		System.out.println("Please enter your age: ");
+		/*System.out.println("\nPlease enter your age: ");
 		int age = scanner.nextInt();
 		if(age>=16 && age<=25) {
 			System.out.println("TODO: add young traveller");
@@ -105,8 +110,47 @@ public class Main {
 			System.out.println("TODO: add middle traveller");
 		} else if(age>60 && age<=115) {
 			System.out.println("TODO: add elder traveller");
-		} else throw new AgeException();
+		} else throw new AgeException();*/
 		
+		
+		HashMap<String, City> citiesHm = new HashMap<String, City>();
+		citiesHm.put("Athens", city1);
+		citiesHm.put("Berlin", city2);
+		citiesHm.put("Tokyo", city3);
+		citiesHm.put("London", city4);
+		citiesHm.put("Amsterdam", city5);
+		citiesHm.put("Paris", city6);
+		
+		searchCity(traveller, citiesHm, travellers);
+		
+		Set<?> set = citiesHm.entrySet();
+		Iterator<?> i = set.iterator();		
+		
+		while(i.hasNext()) { // We iterate and display Entries (nodes) one by one.
+	         @SuppressWarnings("rawtypes")
+			Map.Entry me = (Map.Entry)i.next();
+	        System.out.print("key: "+me.getKey() + ". ");
+	        System.out.print("Class: "+me.getValue().getClass() + ". ");	         
+	    }
+		
+	}
+	
+	public static void searchCity(Traveller traveller, HashMap<String, City> cities, ArrayList<Traveller> travellers) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {		
+		System.out.println("\nEnter city name:");
+		String cityName = scanner.next();			
+		if(cities.containsKey(cityName)) {
+			System.out.println("City:" + cityName + " exists!");
+		} else {
+			System.out.println("You suck and its your fault your father left you.");
+			System.out.println("\nWhich country is your city in?");
+			String cityCountry = scanner.next();
+			City city = new City(cityName, cityCountry,new int[10],new double[2]);
+			city.RetrieveData();
+			cities.put(cityName, city);
+		}
+		long timestamp = System.currentTimeMillis();
+		System.out.print("\n" + timestamp);
+		traveller.setTimestamp(timestamp);		
 	}
 	
 }

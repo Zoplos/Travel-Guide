@@ -67,7 +67,7 @@ public class City implements Comparable<City>{
 		
 		OpenWeatherMap weather_obj = mapper.readValue(new URL("http://api.openweathermap.org/data/2.5/weather?q="+name+","+country+"&APPID="+appid+""), OpenWeatherMap.class);		
 		
-		System.out.println(name+" lat: " + weather_obj.getCoord().getLat()+" lon: " + weather_obj.getCoord().getLon()); //Για να ελέγξω την ορθότητα των δεδομένων lat & lon
+		//System.out.println(name+" lat: " + weather_obj.getCoord().getLat()+" lon: " + weather_obj.getCoord().getLon()); //Για να ελέγξω την ορθότητα των δεδομένων lat & lon
 		
 		MediaWiki mediaWiki_obj =  mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&prop=extracts&titles="+name+"&format=json&formatversion=2"),MediaWiki.class);
 		

@@ -6,11 +6,13 @@ import java.util.Collections;
 public abstract class Traveller implements Comparable<Traveller>{
 	
 	private String name;
+	protected String visit;
 	private int phone;
 	private int terms_vector[];
 	private double geodesic_vector[];
 	protected double similarity;
-	
+	protected float timestamp;
+		
 	public Traveller(String name, int phone, int[] terms_vector, double[] geodesic_vector) {
 		super();
 		this.name = name;
@@ -50,6 +52,22 @@ public abstract class Traveller implements Comparable<Traveller>{
 
 	public void setSimilarity(double similarity) {
 		this.similarity = similarity;
+	}
+	
+	public String getVisit() {
+		return visit;
+	}
+
+	public void setVisit(String visit) {
+		this.visit = visit;
+	}
+
+	public float getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(float timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public abstract double calculate_similarity(City city,Traveller traveller,double p);	
