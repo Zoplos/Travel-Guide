@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public abstract class Traveller implements Comparable<Traveller>{
 	
@@ -11,14 +12,15 @@ public abstract class Traveller implements Comparable<Traveller>{
 	private int terms_vector[];
 	private double geodesic_vector[];
 	protected double similarity;
-	protected float timestamp;
+	protected long timestamp;
 		
-	public Traveller(String name, int phone, int[] terms_vector, double[] geodesic_vector) {
+	public Traveller(String name, int phone, int[] terms_vector, double[] geodesic_vector,long timestamp) {
 		super();
 		this.name = name;
 		this.phone = phone;
 		this.terms_vector = terms_vector;
 		this.geodesic_vector = geodesic_vector;
+		this.timestamp = timestamp;
 	}
 	
 	public String getName() {
@@ -62,11 +64,11 @@ public abstract class Traveller implements Comparable<Traveller>{
 		this.visit = visit;
 	}
 
-	public float getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(float timestamp) {
+	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -114,4 +116,19 @@ public abstract class Traveller implements Comparable<Traveller>{
 		}				
 	}
 	
+	public static Comparator<Traveller> simComparator = new Comparator<Traveller>() {
+		public int compare(Traveller t1, Traveller t2) {
+			if(t1.getSimilarity() < t2.getSimilarity()) return 1;
+			if(t1.getSimilarity() > t2.getSimilarity()) return -1;
+			else return 0;
+		}
+	};
+	
+	public static Comparator<Traveller> timeComparator = new Comparator<Traveller>() {
+		public int compare(Traveller t1, Traveller t2) {
+			if(t1.getTimestamp() < t2.getTimestamp()) return 1;
+			if(t1.getTimestamp() > t2.getTimestamp()) return -1;
+			else return 0;
+		}
+	};
 }

@@ -2,8 +2,8 @@ package main;
 
 public class MiddleTraveller extends Traveller {
 
-	public MiddleTraveller(String name, int phone, int[] terms_vector, double[] geodesic_vector) {
-		super(name, phone, terms_vector, geodesic_vector);
+	public MiddleTraveller(String name, int phone, int[] terms_vector, double[] geodesic_vector, long timestamp) {
+		super(name, phone, terms_vector, geodesic_vector, timestamp);
 		// TODO Auto-generated constructor stub
 	}
 	

@@ -1,21 +1,28 @@
 package main;
 
+import java.util.List;
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import exceptions.AgeException;
 import exceptions.WikipediaException;
 
+/*TODO: Remove unnecessary lines of presentation code in main.*/
 
 public class Main {
 	
@@ -51,15 +58,17 @@ public class Main {
 		cities.add(city4);
 		cities.add(city5);
 		cities.add(city6);
-							
-		YoungTraveller traveller = new YoungTraveller("John",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105});
-		MiddleTraveller traveller1 = new MiddleTraveller("Jason",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917});
-		ElderTraveller traveller2 = new ElderTraveller("Nick",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257});	
+		
+		YoungTraveller traveller = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis());
+		MiddleTraveller traveller1 = new MiddleTraveller("Jason Mivrakas",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917},System.currentTimeMillis() + 200);
+		ElderTraveller traveller2 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},System.currentTimeMillis() - 12345);
+		YoungTraveller traveller3 = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis() -832745);
 		
 		ArrayList<Traveller> travellers = new ArrayList<Traveller>();
 		travellers.add(traveller);
 		travellers.add(traveller1);
 		travellers.add(traveller2);
+		travellers.add(traveller3);
 		
 		System.out.println("\nSimilarity of certain city for all Travellers:\n");
 		for(int i=0;i<travellers.size();i++) {
@@ -97,9 +106,18 @@ public class Main {
 			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
 			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
 		}
-		Collections.sort(travellers);
+		Collections.sort(travellers, Traveller.simComparator);
 		System.out.println("\nFree ticket to Tokyo goes to: " + travellers.get(0).getName());
 		
+		System.out.println("\nComparator results check:\n");
+		for(int i = 0;i<travellers.size();i++) {
+			System.out.println("Name: "+ travellers.get(i).getName() + ", similarity: " + travellers.get(i).getSimilarity());
+		}
+		Collections.sort(travellers, Traveller.timeComparator);
+		System.out.println("\nComparator results check:\n");
+		for(int i = 0;i<travellers.size();i++) {
+			System.out.println("Name: "+ travellers.get(i).getName() + ", timestamp: " + travellers.get(i).getTimestamp());
+		}
 		
 		scanner = new Scanner(System.in);
 		/*System.out.println("\nPlease enter your age: ");
@@ -130,27 +148,55 @@ public class Main {
 	         @SuppressWarnings("rawtypes")
 			Map.Entry me = (Map.Entry)i.next();
 	        System.out.print("key: "+me.getKey() + ". ");
-	        System.out.print("Class: "+me.getValue().getClass() + ". ");	         
+	        System.out.print("Class: "+me.getValue().getClass() + ". ");         
 	    }
 		
+		System.out.println("\nTraveller timestamp after searchCity method: " + traveller.getTimestamp());
+		presentTravellers(travellers);
+		
+		writeJSON(travellers);
+		
 	}
+	
+	
 	
 	public static void searchCity(Traveller traveller, HashMap<String, City> cities, ArrayList<Traveller> travellers) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {		
 		System.out.println("\nEnter city name:");
 		String cityName = scanner.next();			
 		if(cities.containsKey(cityName)) {
-			System.out.println("City:" + cityName + " exists!");
-		} else {
-			System.out.println("You suck and its your fault your father left you.");
+			System.out.println("City: " + cityName + " exists!");
+		} else {			
 			System.out.println("\nWhich country is your city in?");
 			String cityCountry = scanner.next();
 			City city = new City(cityName, cityCountry,new int[10],new double[2]);
 			city.RetrieveData();
 			cities.put(cityName, city);
 		}
-		long timestamp = System.currentTimeMillis();
+		Date date = new Date();
+		long timestamp = date.getTime();
 		System.out.print("\n" + timestamp);
-		traveller.setTimestamp(timestamp);		
+		traveller.setTimestamp(timestamp);
+	}
+	
+	public static void presentTravellers(ArrayList<Traveller> travellers) {
+		Set<Traveller> set = new LinkedHashSet<>();
+		set.addAll(travellers);
+		travellers.clear();
+		travellers.addAll(set);
+		for(int i = 0; i < travellers.size();i++) {
+			System.out.println("Traveller's name : " + travellers.get(i).getName() + ", timestamp: " + travellers.get(i).getTimestamp());
+		}
+	}
+	
+	public static void writeJSON(ArrayList<Traveller> in_arraylist) throws JsonGenerationException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.writeValue(new File("arraylist_travellers.json"), in_arraylist);
+	}
+	
+	public ArrayList<Traveller> readJson() throws JsonParseException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayList<Traveller> out_arraylist = mapper.readValue(new File("arraylist_travellers.json"), mapper.getTypeFactory().constructCollectionType(List.class, Traveller.class));
+		return out_arraylist;
 	}
 	
 }
