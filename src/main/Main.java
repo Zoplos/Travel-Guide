@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -32,6 +31,8 @@ public class Main {
 
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException {
 		
+		Date date = new Date();
+		scanner = new Scanner(System.in);
 		
 		City city1 = new City("Athens","gr",new int[10],new double[2]);
 		city1.RetrieveData();
@@ -51,6 +52,14 @@ public class Main {
 		City city6 = new City("Paris","fr",new int[10],new double[2]);
 		city6.RetrieveData();
 		
+		HashMap<String, City> citiesHm = new HashMap<String, City>();
+		citiesHm.put("Athens", city1);
+		citiesHm.put("Berlin", city2);
+		citiesHm.put("Tokyo", city3);
+		citiesHm.put("London", city4);
+		citiesHm.put("Amsterdam", city5);
+		citiesHm.put("Paris", city6);
+		
 		ArrayList<City> cities = new ArrayList<City>();
 		cities.add(city1);
 		cities.add(city2);
@@ -59,16 +68,18 @@ public class Main {
 		cities.add(city5);
 		cities.add(city6);
 		
-		YoungTraveller traveller = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis());
-		MiddleTraveller traveller1 = new MiddleTraveller("Jason Mivrakas",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917},System.currentTimeMillis() + 200);
-		ElderTraveller traveller2 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},System.currentTimeMillis() - 12345);
-		YoungTraveller traveller3 = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis() -832745);
+		YoungTraveller traveller = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, date.getTime());
+		MiddleTraveller traveller1 = new MiddleTraveller("Jason Mivrakas",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917},date.getTime() * 3);
+		ElderTraveller traveller2 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},date.getTime() * 2);
+		YoungTraveller traveller3 = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis() - 1268327445);
+		ElderTraveller traveller4 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},date.getTime() /2);
 		
 		ArrayList<Traveller> travellers = new ArrayList<Traveller>();
 		travellers.add(traveller);
 		travellers.add(traveller1);
 		travellers.add(traveller2);
 		travellers.add(traveller3);
+		travellers.add(traveller4);
 		
 		System.out.println("\nSimilarity of certain city for all Travellers:\n");
 		for(int i=0;i<travellers.size();i++) {
@@ -113,13 +124,12 @@ public class Main {
 		for(int i = 0;i<travellers.size();i++) {
 			System.out.println("Name: "+ travellers.get(i).getName() + ", similarity: " + travellers.get(i).getSimilarity());
 		}
-		Collections.sort(travellers, Traveller.timeComparator);
+		Collections.sort(travellers, Traveller.NameTimeComparator);
 		System.out.println("\nComparator results check:\n");
 		for(int i = 0;i<travellers.size();i++) {
 			System.out.println("Name: "+ travellers.get(i).getName() + ", timestamp: " + travellers.get(i).getTimestamp());
 		}
-		
-		scanner = new Scanner(System.in);
+				
 		/*System.out.println("\nPlease enter your age: ");
 		int age = scanner.nextInt();
 		if(age>=16 && age<=25) {
@@ -129,23 +139,14 @@ public class Main {
 		} else if(age>60 && age<=115) {
 			System.out.println("TODO: add elder traveller");
 		} else throw new AgeException();*/
-		
-		
-		HashMap<String, City> citiesHm = new HashMap<String, City>();
-		citiesHm.put("Athens", city1);
-		citiesHm.put("Berlin", city2);
-		citiesHm.put("Tokyo", city3);
-		citiesHm.put("London", city4);
-		citiesHm.put("Amsterdam", city5);
-		citiesHm.put("Paris", city6);
-		
+		presentTravellers(travellers);
 		searchCity(traveller, citiesHm, travellers);
 		
 		Set<?> set = citiesHm.entrySet();
 		Iterator<?> i = set.iterator();		
 		
 		while(i.hasNext()) { // We iterate and display Entries (nodes) one by one.
-	         @SuppressWarnings("rawtypes")
+	        @SuppressWarnings("rawtypes")
 			Map.Entry me = (Map.Entry)i.next();
 	        System.out.print("key: "+me.getKey() + ". ");
 	        System.out.print("Class: "+me.getValue().getClass() + ". ");         
@@ -179,12 +180,27 @@ public class Main {
 	}
 	
 	public static void presentTravellers(ArrayList<Traveller> travellers) {
-		Set<Traveller> set = new LinkedHashSet<>();
-		set.addAll(travellers);
-		travellers.clear();
-		travellers.addAll(set);
-		for(int i = 0; i < travellers.size();i++) {
-			System.out.println("Traveller's name : " + travellers.get(i).getName() + ", timestamp: " + travellers.get(i).getTimestamp());
+		ArrayList<Traveller> noDupsTrav = new ArrayList<Traveller>();
+		Collections.sort(travellers, Traveller.NameTimeComparator);
+		
+		for(int i=0;i<travellers.size();i++) {
+			boolean flag = false;
+			for(int j = 0; j < noDupsTrav.size(); j++) {
+				
+				if(travellers.get(i).getName().equals(noDupsTrav.get(j).getName())) {
+					flag = true;					
+				}
+				
+			}
+			
+			if(flag == false) {
+				noDupsTrav.add(travellers.get(i));
+			}
+		}
+		
+		Collections.sort(noDupsTrav,Traveller.timeComparator);
+		for(int i = 0; i < noDupsTrav.size();i++) {
+			System.out.println("Traveller's name : " + noDupsTrav.get(i).getName() + ", timestamp: " + noDupsTrav.get(i).getTimestamp());
 		}
 	}
 	

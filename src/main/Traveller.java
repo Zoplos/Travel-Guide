@@ -126,8 +126,21 @@ public abstract class Traveller implements Comparable<Traveller>{
 	
 	public static Comparator<Traveller> timeComparator = new Comparator<Traveller>() {
 		public int compare(Traveller t1, Traveller t2) {
-			if(t1.getTimestamp() < t2.getTimestamp()) return 1;
-			if(t1.getTimestamp() > t2.getTimestamp()) return -1;
+			if(t1.getTimestamp() < t2.getTimestamp()) return -1;
+			if(t1.getTimestamp() > t2.getTimestamp()) return 1;
+			else return 0;
+		}
+	};
+	
+	public static Comparator<Traveller> NameTimeComparator = new Comparator<Traveller>() {
+		public int compare(Traveller t1, Traveller t2) {
+			
+			int nameComp = t1.getName().compareTo(t2.getName());
+			if(nameComp != 0) {
+				return nameComp;
+			}
+			if(t1.getTimestamp() < t2.getTimestamp()) return -1;
+			if(t1.getTimestamp() > t2.getTimestamp()) return 1;
 			else return 0;
 		}
 	};
