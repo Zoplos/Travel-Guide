@@ -1,6 +1,6 @@
 package main;
 
-import java.util.List;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -23,14 +24,12 @@ import exceptions.WikipediaException;
 
 /*TODO: Remove unnecessary lines of presentation code in main.*/
 
-public class Main {
-	
-	
-	
+public class Ergasia {
+
 	private static Scanner scanner;
 
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException {
-		
+		Ergasia tester = new Ergasia();
 		Date date = new Date();
 		scanner = new Scanner(System.in);
 		
@@ -68,19 +67,38 @@ public class Main {
 		cities.add(city5);
 		cities.add(city6);
 		
-		YoungTraveller traveller = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, date.getTime());
-		MiddleTraveller traveller1 = new MiddleTraveller("Jason Mivrakas",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917},date.getTime() * 3);
-		ElderTraveller traveller2 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},date.getTime() * 2);
-		YoungTraveller traveller3 = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis() - 1268327445);
-		ElderTraveller traveller4 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},date.getTime() /2);
+		//YoungTraveller traveller = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, date.getTime());
+		//MiddleTraveller traveller1 = new MiddleTraveller("Jason Mivrakas",123,new int[] {5,12,3,6,65,23,1,6,8,10},new double[] {35.6895,139.6917},date.getTime() * 3);
+		//ElderTraveller traveller2 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},date.getTime() * 2);
+		//YoungTraveller traveller3 = new YoungTraveller("John Zozipolous",123,new int[] {0,27,41,4,1,3,0,6,15,11},new double[] {52.5244,13.4105}, System.currentTimeMillis() - 1268327445);
+		//ElderTraveller traveller4 = new ElderTraveller("Kostas Pepeauthimiou",123,new int[] {4,22,7,12,6,10,1,2,3,4},new double[] {51.5085,-0.1257},date.getTime() /2);
+		//YoungTraveller traveller5 = new YoungTraveller("Maria Kmakatsa",123,new int[] {0,13,41,24,10,3,0,6,8,11},new double[] {52.5244,13.4105}, System.currentTimeMillis() - 468327445);
 		
+		YoungTraveller traveller = new YoungTraveller();
+		traveller.setName("John Zozipoulos");
+		traveller.setPhone(123);
+		traveller.setTerms_vector(new int[] {0,27,41,4,1,3,0,6,15,11});
+		traveller.setTimestamp(date.getTime());
+		traveller.setGeodesic_vector(new double[] {52.5244,13.4105});
 		ArrayList<Traveller> travellers = new ArrayList<Traveller>();
-		travellers.add(traveller);
-		travellers.add(traveller1);
-		travellers.add(traveller2);
-		travellers.add(traveller3);
-		travellers.add(traveller4);
-		
+		try {
+//			
+//			travellers.add(traveller);
+//			travellers.add(traveller1);
+//			travellers.add(traveller2);
+//			travellers.add(traveller3);
+//			travellers.add(traveller4);
+//			travellers.add(traveller5);
+//			tester.writeJSON(travellers);
+			travellers = tester.readJson();
+		} catch (JsonParseException e) {
+	         e.printStackTrace();
+	    } catch (JsonMappingException e) {
+	         e.printStackTrace();
+	    } catch (IOException e) {
+	         e.printStackTrace();
+	    }
+				
 		System.out.println("\nSimilarity of certain city for all Travellers:\n");
 		for(int i=0;i<travellers.size();i++) {
 			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
@@ -130,15 +148,23 @@ public class Main {
 			System.out.println("Name: "+ travellers.get(i).getName() + ", timestamp: " + travellers.get(i).getTimestamp());
 		}
 				
-		/*System.out.println("\nPlease enter your age: ");
+		System.out.println("\nPlease enter your age: ");
 		int age = scanner.nextInt();
 		if(age>=16 && age<=25) {
-			System.out.println("TODO: add young traveller");
+			YoungTraveller newTraveller = new YoungTraveller();
+			newTraveller = (YoungTraveller) travellerCreation(newTraveller);
+			travellers.add(newTraveller);
+			tester.writeJSON(travellers);
 		} else if(age>25 && age <=60) {
-			System.out.println("TODO: add middle traveller");
+			MiddleTraveller newTraveller = new MiddleTraveller();
+			newTraveller = (MiddleTraveller) travellerCreation(newTraveller);
+			travellers.add(newTraveller);			
 		} else if(age>60 && age<=115) {
-			System.out.println("TODO: add elder traveller");
-		} else throw new AgeException();*/
+			ElderTraveller newTraveller = new ElderTraveller();
+			newTraveller = (ElderTraveller) travellerCreation(newTraveller);
+			travellers.add(newTraveller);
+		} else throw new AgeException();
+		
 		presentTravellers(travellers);
 		searchCity(traveller, citiesHm, travellers);
 		
@@ -149,13 +175,11 @@ public class Main {
 	        @SuppressWarnings("rawtypes")
 			Map.Entry me = (Map.Entry)i.next();
 	        System.out.print("key: "+me.getKey() + ". ");
-	        System.out.print("Class: "+me.getValue().getClass() + ". ");         
+	        System.out.print("Class: "+me.getValue().getClass().getName() + ". ");         
 	    }
 		
 		System.out.println("\nTraveller timestamp after searchCity method: " + traveller.getTimestamp());
 		presentTravellers(travellers);
-		
-		writeJSON(travellers);
 		
 	}
 	
@@ -189,30 +213,58 @@ public class Main {
 				
 				if(travellers.get(i).getName().equals(noDupsTrav.get(j).getName())) {
 					flag = true;					
-				}
-				
+				}				
 			}
 			
 			if(flag == false) {
 				noDupsTrav.add(travellers.get(i));
 			}
-		}
-		
+		}		
 		Collections.sort(noDupsTrav,Traveller.timeComparator);
 		for(int i = 0; i < noDupsTrav.size();i++) {
 			System.out.println("Traveller's name : " + noDupsTrav.get(i).getName() + ", timestamp: " + noDupsTrav.get(i).getTimestamp());
 		}
 	}
 	
-	public static void writeJSON(ArrayList<Traveller> in_arraylist) throws JsonGenerationException, JsonMappingException, IOException {
+	public void writeJSON(ArrayList<Traveller> in_arraylist) throws JsonGenerationException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.writeValue(new File("arraylist_travellers.json"), in_arraylist);
+		mapper.enableDefaultTyping();
+		AllTravellers data = new AllTravellers();
+		data.setCollectionAllTravellers(in_arraylist);
+		mapper.writeValue(new File("arraylist_travellers.json"), data);
 	}
 	
 	public ArrayList<Traveller> readJson() throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		ArrayList<Traveller> out_arraylist = mapper.readValue(new File("arraylist_travellers.json"), mapper.getTypeFactory().constructCollectionType(List.class, Traveller.class));
-		return out_arraylist;
+		mapper.enableDefaultTyping();
+		AllTravellers data = mapper.readValue(new File("arraylist_travellers.json"), AllTravellers.class);
+		return data.getCollectionAllTravellers();
 	}
-	
+	private static Traveller travellerCreation(Traveller traveller) {
+		Date date = new Date();
+		System.out.println("\nEnter your full name: ");
+		String name = scanner.next();
+		traveller.setName(name);
+		System.out.println("\nEnter your phone number: ");
+		int phone = scanner.nextInt();
+		traveller.setPhone(phone);
+		traveller.setTimestamp(date.getTime());
+		int cafe = ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int sea = ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int museum = ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int restaurant= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int stadium= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int cinema= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int mountain= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int lake= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int river= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		int bar= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		traveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
+		System.out.println("\nAdd your longitude: ");
+		double lon = scanner.nextDouble();
+		System.out.println("\nAdd your latitude: ");
+		double lat = scanner.nextDouble();
+		traveller.setGeodesic_vector(new double[] {lon,lat});
+		return traveller;
+	}
 }

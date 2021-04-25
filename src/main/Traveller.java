@@ -14,13 +14,13 @@ public abstract class Traveller implements Comparable<Traveller>{
 	protected double similarity;
 	protected long timestamp;
 		
-	public Traveller(String name, int phone, int[] terms_vector, double[] geodesic_vector,long timestamp) {
+	public Traveller(/*String name, int phone, int[] terms_vector, double[] geodesic_vector,long timestamp*/) {
 		super();
-		this.name = name;
-		this.phone = phone;
-		this.terms_vector = terms_vector;
-		this.geodesic_vector = geodesic_vector;
-		this.timestamp = timestamp;
+//		this.name = name;
+//		this.phone = phone;
+//		this.terms_vector = terms_vector;
+//		this.geodesic_vector = geodesic_vector;
+//		this.timestamp = timestamp;
 	}
 	
 	public String getName() {

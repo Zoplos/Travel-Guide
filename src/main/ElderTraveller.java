@@ -2,8 +2,8 @@ package main;
 
 public class ElderTraveller extends Traveller{
 
-	public ElderTraveller(String name, int phone, int[] terms_vector, double[] geodesic_vector, long timestamp) {
-		super(name, phone, terms_vector, geodesic_vector, timestamp);
+	public ElderTraveller(/*String name, int phone, int[] terms_vector, double[] geodesic_vector, long timestamp*/) {
+		super(/*name, phone, terms_vector, geodesic_vector, timestamp*/);
 		// TODO Auto-generated constructor stub
 	}
 

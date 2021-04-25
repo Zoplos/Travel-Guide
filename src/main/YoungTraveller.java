@@ -3,8 +3,8 @@ package main;
 
 public class YoungTraveller extends Traveller{
 
-	public YoungTraveller(String name, int phone, int[] terms_vector, double[] geodesic_vector, long timestamp) {
-		super(name, phone, terms_vector, geodesic_vector, timestamp);
+	public YoungTraveller(/*String name, int phone, int[] terms_vector, double[] geodesic_vector, long timestamp*/) {
+		super(/*name, phone, terms_vector, geodesic_vector, timestamp*/);
 		// TODO Auto-generated constructor stub
 	}		
 	
