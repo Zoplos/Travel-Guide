@@ -111,6 +111,10 @@ public class City implements Comparable<City>{
 		}		
 	}
 	
+	public String toString() {
+		return "City name: " + name + ", country: " + country;
+	}
+	
 	
 	
 }

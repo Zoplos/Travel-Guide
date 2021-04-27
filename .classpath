@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="/home/zop/Documents/OOPII2-jars/JARS/jackson-annotations-2.9.8.jar"/>
 	<classpathentry kind="lib" path="/home/zop/Documents/OOPII2-jars/JARS/jackson-core-2.9.8.jar"/>
 	<classpathentry kind="lib" path="/home/zop/Documents/OOPII2-jars/JARS/jackson-databind-2.9.8.jar"/>
+	<classpathentry kind="lib" path="/home/zop/Documents/OOPII2-jars/JARS/ojdbc8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
