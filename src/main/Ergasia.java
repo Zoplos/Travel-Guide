@@ -40,34 +40,10 @@ public class Ergasia {
 		
 		Ergasia tester = new Ergasia();
 		scanner = new Scanner(System.in);
-		
 		makeJDBCConnection();
-		ReadData();
-		City city1 = new City("Athens","gr",new int[10],new double[2]);
-		city1.RetrieveData();
-		
-		City city2 = new City("Berlin","de",new int[10],new double[2]);
-		city2.RetrieveData();
-		
-		City city3 = new City("Tokyo","jp",new int[10],new double[2]);
-		city3.RetrieveData();
-		
-		City city4 = new City("London","uk",new int[10],new double[2]);
-		city4.RetrieveData();
-		
-		City city5 = new City("Amsterdam","nl",new int[10],new double[2]);
-		city5.RetrieveData();
-		
-		City city6 = new City("Paris","fr",new int[10],new double[2]);
-		city6.RetrieveData();
-		
-		HashMap<String, City> citiesHm = new HashMap<String, City>();
-		citiesHm.put("Athens", city1);
-		citiesHm.put("Berlin", city2);
-		citiesHm.put("Tokyo", city3);
-		citiesHm.put("London", city4);
-		citiesHm.put("Amsterdam", city5);
-		citiesHm.put("Paris", city6);
+
+		HashMap<String, City> citiesHm = LoadData();
+
 		
 		ArrayList<City> cities = new ArrayList<City>();
 		Set<?> set = citiesHm.entrySet();
@@ -96,34 +72,16 @@ public class Ergasia {
 	    } catch (IOException e) {
 	         e.printStackTrace();
 	    }
-				
-//		System.out.println("\nSimilarity of certain city for all Travellers:\n");
-//		for(int i=0;i<travellers.size();i++) {
-//			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
-//			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
-//		}
-//		
-//		for(int k = 0; k<cities.size();k++) {
-//			cities.get(k).setSimilarity(travellers.get(0).calculate_similarity(cities.get(k), travellers.get(0), 0.2));
-//		}
-//				
-//		System.out.println("\nSimilarity of each city for Young Traveller:\n");
-//		for(int k = 0; k<cities.size();k++) {
-//			System.out.println(cities.get(k).getSimilarity() + " " +cities.get(k).getName());
-//		}
-//		
-//		Collections.sort(cities);
-//		
-//		System.out.println("\nSorted similarity of each city for Young Traveller:\n");
-//		for(int k = 0; k<cities.size();k++) {
-//			System.out.println(cities.get(k).getSimilarity() + " " +cities.get(k).getName());
-//		} 
 		
+		System.out.println("\nTestTESTTEST");
+		for(int i=0;i<travellers.size();i++) {
+			System.out.println("Best city for: " + travellers.get(i).getName() + " is " + travellers.get(i).compare_cities(cities));
+		}
 		
 		//Method overloading example
 		System.out.println("\nCompare cities results:\n");
 				
-		System.out.println(travellers.get(0).compare_cities(cities).getName());
+		System.out.println(travellers.get(0).compare_cities(cities));
 		ArrayList<City> test2 = travellers.get(0).compare_cities(cities, 5);
 		
 		for(int i1 = 0; i1<test2.size();i1++) {
@@ -133,14 +91,14 @@ public class Ergasia {
 		//Working polymorphism example using abstract method "calculate_similarity"
 		System.out.println("\nFree ticket to Tokyo, polymorphism example:\n");
 		for(int i=0;i<travellers.size();i++) {
-			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(city3, travellers.get(i), 0.5));
+			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(citiesHm.get("Tokyo"), travellers.get(i), 0.5));
 			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
 		}
 		Collections.sort(travellers, Traveller.simComparator);
 		System.out.println("\nFree ticket to Tokyo goes to: " + travellers.get(0).getName());
 		
 		//Traveller Creation method for each possible age,
-		//throws exception if the age is not correct
+		//throws exception if the age is incorrect
 		System.out.println("\nCreate new traveller? [y/n]");
 		String answer = scanner.next().toLowerCase();
 		if(answer.equals("yes")|| answer.equals("y")) {
@@ -148,23 +106,24 @@ public class Ergasia {
 			int age = scanner.nextInt();
 			if(age>=16 && age<=25) {
 				YoungTraveller newTraveller = new YoungTraveller();
-				newTraveller = (YoungTraveller) travellerCreation(newTraveller);
+				newTraveller = (YoungTraveller) createTraveller(newTraveller);
 				travellers.add(newTraveller);
 				tester.writeJSON(travellers);
 			} else if(age>25 && age <=60) {
 				MiddleTraveller newTraveller = new MiddleTraveller();
-				newTraveller = (MiddleTraveller) travellerCreation(newTraveller);
+				newTraveller = (MiddleTraveller) createTraveller(newTraveller);
 				travellers.add(newTraveller);
 				tester.writeJSON(travellers);
 			} else if(age>60 && age<=115) {
 				ElderTraveller newTraveller = new ElderTraveller();
-				newTraveller = (ElderTraveller) travellerCreation(newTraveller);
+				newTraveller = (ElderTraveller) createTraveller(newTraveller);
 				travellers.add(newTraveller);
 				tester.writeJSON(travellers);
 			} else throw new AgeException();
 		}
 		
 		// Presenting travellers without duplicates sorted by their timestamp
+		System.out.println("\nNo Duplicate travellers:");
 		presentTravellers(travellers);
 		searchCity(travellers.get(0), citiesHm, travellers, cities);
 		
@@ -174,12 +133,12 @@ public class Ergasia {
 		presentTravellers(travellers);
 		
 	}
-	
-	
-	
+		
 	public static void searchCity(Traveller traveller, HashMap<String, City> citiesHm, ArrayList<Traveller> travellers, ArrayList<City> cities) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {		
 		System.out.println("\nEnter city name:");
-		String cityName = scanner.next();			
+		scanner.nextLine();
+		String cityName = scanner.nextLine();
+		
 		if(citiesHm.containsKey(cityName)) {
 			System.out.println("City: " + cityName + " exists!");
 		} else {			
@@ -189,11 +148,13 @@ public class Ergasia {
 			city.RetrieveData();
 			citiesHm.put(cityName, city);
 			cities.add(city);
+			addDataToDB(city);
 		}
 		System.out.println("\nTraveller class: "+traveller.getClass());
 		long timestamp = date.getTime();
 		System.out.print("\n" + timestamp);
-		traveller.setTimestamp(timestamp);
+		//traveller.setTimestamp(timestamp);
+		
 	}
 	
 	public static void presentTravellers(ArrayList<Traveller> travellers) {
@@ -232,10 +193,12 @@ public class Ergasia {
 		AllTravellers data = mapper.readValue(new File("arraylist_travellers.json"), AllTravellers.class);
 		return data.getCollectionAllTravellers();
 	}
-	private static Traveller travellerCreation(Traveller traveller) {
+	
+	private static Traveller createTraveller(Traveller traveller) {
 		Date date = new Date();
 		System.out.println("\nEnter your full name: ");
-		String name = scanner.next();
+		scanner.nextLine();
+		String name = scanner.nextLine();
 		traveller.setName(name);
 		System.out.println("\nEnter your phone number: ");
 		int phone = scanner.nextInt();
@@ -289,11 +252,14 @@ public class Ergasia {
  
 	}
 	
-	private static void ReadData() throws SQLException {
+	private static HashMap<String, City> LoadData() throws SQLException {
 		db_prep_obj = db_con_obj.prepareStatement("select * from cities");
 		ResultSet  rs = db_prep_obj.executeQuery();
-
+		HashMap<String,City> cities = new HashMap<String,City>();
+		
+		
 	    while (rs.next()){
+	    	
 	    	String city_name = rs.getString("CITY_NAME");
 	    	String country = rs.getString("COUNTRY");
 	    	double lat = rs.getDouble("LAT");
@@ -308,10 +274,43 @@ public class Ergasia {
 	        int term_8 = rs.getInt("LAKE");
 	        int term_9 = rs.getInt("RIVER");
 	        int term_10 = rs.getInt("BAR");
-
-	        System.out.println("The data are: "+ city_name + " " + country + " "+ lat+ " "+ lon+ " "+ term_1+ " "+ term_2+ " "+ term_3+ " "+ term_4+ " "+ term_5
-	        		+ " "+ term_6+ " "+ term_7+ " "+ term_8+ " "+ term_9+ " "+ term_10);
-	        
+	        double geo[] = {lat,lon};
+	    	int terms[]= {term_1,term_2,term_3,term_4,term_5,term_6,term_7,term_8,term_9,term_10};
+	    	
+	    	cities.put(city_name, new City(city_name,country,terms,geo));
+//	        System.out.println("The data are: "+ city_name + " " + country + " "+ lat+ " "+ lon+ " "+ term_1+ " "+ term_2+ " "+ term_3+ " "+ term_4+ " "+ term_5
+//	        		+ " "+ term_6+ " "+ term_7+ " "+ term_8+ " "+ term_9+ " "+ term_10);
 	    }
+	    return cities;
+	}
+	
+	private static void addDataToDB(City city) {
+		 
+		try {
+			String insertQueryStatement = "INSERT  INTO  CITIES  VALUES  (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";			
+			db_prep_obj = db_con_obj.prepareStatement(insertQueryStatement);
+			db_prep_obj.setString(1, city.getName());//.setInt(1, newKey);//.setString
+			db_prep_obj.setString(2, city.getCountry());
+			db_prep_obj.setDouble(3, city.getGeodesic_vector()[0]);//.setInt(2, year);
+			db_prep_obj.setDouble(4, city.getGeodesic_vector()[1]);
+			db_prep_obj.setInt(5, city.getTerms_vector()[0]);
+			db_prep_obj.setInt(6, city.getTerms_vector()[1]);
+			db_prep_obj.setInt(7, city.getTerms_vector()[2]);
+			db_prep_obj.setInt(8, city.getTerms_vector()[3]);
+			db_prep_obj.setInt(9, city.getTerms_vector()[4]);
+			db_prep_obj.setInt(10, city.getTerms_vector()[5]);
+			db_prep_obj.setInt(11, city.getTerms_vector()[6]);
+			db_prep_obj.setInt(12, city.getTerms_vector()[7]);
+			db_prep_obj.setInt(13, city.getTerms_vector()[8]);
+			db_prep_obj.setInt(14, city.getTerms_vector()[9]);			
+			// execute insert SQL statement Executes the SQL statement in this PreparedStatement object, which must be an SQL Data Manipulation Language (DML) statement
+			int numRowChanged = db_prep_obj.executeUpdate(); //either (1) the row count for SQL Data Manipulation Language (DML) statements or (2) 0 for SQL statements that return nothing
+			System.out.println("Rows "+numRowChanged+" changed.");
+			
+		} catch (
+ 
+		SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

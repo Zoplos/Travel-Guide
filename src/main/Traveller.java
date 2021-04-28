@@ -98,9 +98,12 @@ public abstract class Traveller implements Comparable<Traveller>{
 		}
 	}		
 	
-	public City compare_cities(ArrayList<City> cities) {
+	public String compare_cities(ArrayList<City> cities) {
+		for(int k = 0; k<cities.size();k++) {
+			cities.get(k).setSimilarity(this.calculate_similarity(cities.get(k), this, 0.2));
+		}
 		Collections.sort(cities);
-		return cities.get(0);
+		return cities.get(0).getName();
 	}
 	
 	public ArrayList<City> compare_cities(ArrayList<City> cities,int max){
