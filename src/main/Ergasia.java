@@ -73,6 +73,17 @@ public class Ergasia {
 	         e.printStackTrace();
 	    }
 		
+		System.out.println("\nWhat is traveller one?");
+		if(travellers.get(0).getClass().getTypeName() == "main.YoungTraveller") {
+			System.out.println("\nHe is young");
+		} else if(travellers.get(0).getClass().getTypeName() == "main.MiddleTraveller") {
+			System.out.println("\nHe is middle");
+		} else if(travellers.get(0).getClass().getTypeName() == "main.ElderTraveller") {
+			System.out.println("\nHe is elder");
+		} else {
+			System.out.println("\nHe is none");
+		}
+		
 		System.out.println("\nTestTESTTEST");
 		for(int i=0;i<travellers.size();i++) {
 			System.out.println("Best city for: " + travellers.get(i).getName() + " is " + travellers.get(i).compare_cities(cities));
@@ -125,10 +136,8 @@ public class Ergasia {
 		// Presenting travellers without duplicates sorted by their timestamp
 		System.out.println("\nNo Duplicate travellers:");
 		presentTravellers(travellers);
-		searchCity(travellers.get(0), citiesHm, travellers, cities);
+		searchCity(travellers.get(0), citiesHm, travellers, cities);				
 		
-		
-
 		//System.out.println("\nTraveller timestamp after searchCity method: " + traveller.getTimestamp());
 		presentTravellers(travellers);
 		
@@ -139,6 +148,7 @@ public class Ergasia {
 		scanner.nextLine();
 		String cityName = scanner.nextLine();
 		
+		//if city name is not a key in the hashmap, uses the api to search for the city
 		if(citiesHm.containsKey(cityName)) {
 			System.out.println("City: " + cityName + " exists!");
 		} else {			
@@ -150,17 +160,39 @@ public class Ergasia {
 			cities.add(city);
 			addDataToDB(city);
 		}
+		
 		System.out.println("\nTraveller class: "+traveller.getClass());
 		long timestamp = date.getTime();
-		System.out.print("\n" + timestamp);
-		//traveller.setTimestamp(timestamp);
 		
+		//Creating a copy of the traveller that used the method
+		if(traveller.getClass().getTypeName() == "main.YoungTraveller") {
+			YoungTraveller newTrav = new YoungTraveller();
+			newTrav = (YoungTraveller) copyTraveller(traveller,newTrav,timestamp);
+			travellers.add(newTrav);
+		} else if(traveller.getClass().getTypeName() == "main.MiddleTraveller") {
+			MiddleTraveller newTrav = new MiddleTraveller();
+			newTrav = (MiddleTraveller) copyTraveller(traveller,newTrav,timestamp);
+			travellers.add(newTrav);
+		} else if(traveller.getClass().getTypeName() == "main.ElderTraveller") {
+			ElderTraveller newTrav = new ElderTraveller();
+			newTrav = (ElderTraveller) copyTraveller(traveller,newTrav,timestamp);
+			travellers.add(newTrav);
+		}		
+	}
+	
+	public static Traveller copyTraveller(Traveller oldTrav, Traveller newTrav, long timestamp) {
+		newTrav.setGeodesic_vector(oldTrav.getGeodesic_vector());
+		newTrav.setName(oldTrav.getName());
+		newTrav.setPhone(oldTrav.getPhone());
+		newTrav.setTerms_vector(oldTrav.getTerms_vector());
+		newTrav.setTimestamp(timestamp);
+		return newTrav;
 	}
 	
 	public static void presentTravellers(ArrayList<Traveller> travellers) {
 		ArrayList<Traveller> noDupsTrav = new ArrayList<Traveller>();
 		Collections.sort(travellers, Traveller.NameTimeComparator);
-		
+		//flag determines if the traveller is already in the list or not
 		for(int i=0;i<travellers.size();i++) {
 			boolean flag = false;
 			for(int j = 0; j < noDupsTrav.size(); j++) {
@@ -196,6 +228,8 @@ public class Ergasia {
 	
 	private static Traveller createTraveller(Traveller traveller) {
 		Date date = new Date();
+		
+		//Information gathering
 		System.out.println("\nEnter your full name: ");
 		scanner.nextLine();
 		String name = scanner.nextLine();
@@ -204,6 +238,8 @@ public class Ergasia {
 		int phone = scanner.nextInt();
 		traveller.setPhone(phone);
 		traveller.setTimestamp(date.getTime());
+		
+		//Random generation of terms vector
 		int cafe = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		int sea = ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		int museum = ThreadLocalRandom.current().nextInt(0, 30 + 1);
@@ -214,6 +250,7 @@ public class Ergasia {
 		int lake= ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		int river= ThreadLocalRandom.current().nextInt(0, 30 + 1);
 		int bar= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+		
 		traveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 		System.out.println("\nAdd your longitude: ");
 		double lon = scanner.nextDouble();
