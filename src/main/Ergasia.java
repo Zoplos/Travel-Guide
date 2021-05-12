@@ -35,15 +35,15 @@ public class Ergasia {
 	static PreparedStatement db_prep_obj = null;
 	private static Scanner scanner;
 	static Date date = new Date();
+	static Ergasia tester = new Ergasia();
 	
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException, SQLException {
 		
-		Ergasia tester = new Ergasia();
+		
 		scanner = new Scanner(System.in);
 		makeJDBCConnection();
 
 		HashMap<String, City> citiesHm = LoadData();
-
 		
 		ArrayList<City> cities = new ArrayList<City>();
 		Set<?> set = citiesHm.entrySet();
@@ -51,16 +51,9 @@ public class Ergasia {
 		
 		while(iter.hasNext()) {
 	        @SuppressWarnings("rawtypes")
-			Map.Entry me = (Map.Entry)iter.next();
-	        System.out.print("key: "+me.getKey() + ". ");
-	        System.out.print("Values: "+me.getValue().toString()+ ". ");
+			Map.Entry me = (Map.Entry)iter.next();	        
 	        cities.add((City) me.getValue());
-	    }
-		System.out.println("\n"); 
-		for(int i =0; i<cities.size();i++) {
-			
-			System.out.println(cities.get(i).toString());
-		}
+	    }	
 		
 		ArrayList<Traveller> travellers = new ArrayList<Traveller>();
 		try {
@@ -73,27 +66,11 @@ public class Ergasia {
 	         e.printStackTrace();
 	    }
 		
-		System.out.println("\nWhat is traveller one?");
-		if(travellers.get(0).getClass().getTypeName() == "main.YoungTraveller") {
-			System.out.println("\nHe is young");
-		} else if(travellers.get(0).getClass().getTypeName() == "main.MiddleTraveller") {
-			System.out.println("\nHe is middle");
-		} else if(travellers.get(0).getClass().getTypeName() == "main.ElderTraveller") {
-			System.out.println("\nHe is elder");
-		} else {
-			System.out.println("\nHe is none");
-		}
-		
-		System.out.println("\nTestTESTTEST");
-		for(int i=0;i<travellers.size();i++) {
-			System.out.println("Best city for: " + travellers.get(i).getName() + " is " + travellers.get(i).compare_cities(cities));
-		}
-		
 		//Method overloading example
 		System.out.println("\nCompare cities results:\n");
 				
-		System.out.println(travellers.get(0).compare_cities(cities));
-		ArrayList<City> test2 = travellers.get(0).compare_cities(cities, 5);
+		System.out.println(travellers.get(0).compare_cities(cities, 0.2));
+		ArrayList<City> test2 = travellers.get(0).compare_cities(cities,0.2,3);
 		
 		for(int i1 = 0; i1<test2.size();i1++) {
 			System.out.println(test2.get(i1).getName());
@@ -102,11 +79,15 @@ public class Ergasia {
 		//Working polymorphism example using abstract method "calculate_similarity"
 		System.out.println("\nFree ticket to Tokyo, polymorphism example:\n");
 		for(int i=0;i<travellers.size();i++) {
-			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(citiesHm.get("Tokyo"), travellers.get(i), 0.5));
+			travellers.get(i).setSimilarity(travellers.get(i).calculate_similarity(citiesHm.get("Tokyo"), travellers.get(i), 0.23));
 			System.out.println(travellers.get(i).getSimilarity() + " Traveller: " + travellers.get(i).getName());
 		}
 		Collections.sort(travellers, Traveller.simComparator);
 		System.out.println("\nFree ticket to Tokyo goes to: " + travellers.get(0).getName());
+		
+		// Presenting travellers without duplicates sorted by their timestamp
+		System.out.println("\nNo Duplicate travellers:");
+		presentTravellers(travellers);
 		
 		//Traveller Creation method for each possible age,
 		//throws exception if the age is incorrect
@@ -131,13 +112,15 @@ public class Ergasia {
 				travellers.add(newTraveller);
 				tester.writeJSON(travellers);
 			} else throw new AgeException();
+		}		
+		
+		//Searching for a certain city || adding new to db
+		System.out.println("\nSearch for a city? [y/n]");
+		String answerCitySearch = scanner.next().toLowerCase();
+		if(answerCitySearch.equals("yes") || answerCitySearch.equals("y")) {
+			searchCity(travellers.get(0), citiesHm, travellers, cities);
 		}
-		
-		// Presenting travellers without duplicates sorted by their timestamp
-		System.out.println("\nNo Duplicate travellers:");
-		presentTravellers(travellers);
-		searchCity(travellers.get(0), citiesHm, travellers, cities);				
-		
+						
 		//System.out.println("\nTraveller timestamp after searchCity method: " + traveller.getTimestamp());
 		presentTravellers(travellers);
 		
@@ -161,7 +144,6 @@ public class Ergasia {
 			addDataToDB(city);
 		}
 		
-		System.out.println("\nTraveller class: "+traveller.getClass());
 		long timestamp = date.getTime();
 		
 		//Creating a copy of the traveller that used the method
@@ -177,7 +159,8 @@ public class Ergasia {
 			ElderTraveller newTrav = new ElderTraveller();
 			newTrav = (ElderTraveller) copyTraveller(traveller,newTrav,timestamp);
 			travellers.add(newTrav);
-		}		
+		}
+		tester.writeJSON(travellers);
 	}
 	
 	public static Traveller copyTraveller(Traveller oldTrav, Traveller newTrav, long timestamp) {

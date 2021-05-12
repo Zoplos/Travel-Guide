@@ -98,20 +98,24 @@ public abstract class Traveller implements Comparable<Traveller>{
 		}
 	}		
 	
-	public String compare_cities(ArrayList<City> cities) {
+	public String compare_cities(ArrayList<City> cities, double p) {
 		for(int k = 0; k<cities.size();k++) {
-			cities.get(k).setSimilarity(this.calculate_similarity(cities.get(k), this, 0.2));
+			cities.get(k).setSimilarity(this.calculate_similarity(cities.get(k), this, p));
 		}
 		Collections.sort(cities);
 		return cities.get(0).getName();
 	}
 	
-	public ArrayList<City> compare_cities(ArrayList<City> cities,int max){
+	public ArrayList<City> compare_cities(ArrayList<City> cities,double p,int max){
 		ArrayList<City> test = new ArrayList<City>();
 		if(max<2 || max>5) {
 			System.out.println("The integer given must be [2,5]");
 			return null;
 		} else {
+			for(int k = 0; k<cities.size();k++) {
+				cities.get(k).setSimilarity(this.calculate_similarity(cities.get(k), this, p));
+			}
+			Collections.sort(cities);
 			for(int i=1;i<max;i++) {
 				test.add(cities.get(i));
 			}
