@@ -151,4 +151,8 @@ public abstract class Traveller implements Comparable<Traveller>{
 			else return 0;
 		}
 	};
+	
+	public String toString() {
+		return name;
+	}
 }

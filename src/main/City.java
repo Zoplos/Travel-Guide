@@ -111,10 +111,12 @@ public class City implements Comparable<City>{
 		}		
 	}
 	
+//	public String toString() {
+//		return "City name: " + name + ", country: " + country + ", geo vector: " + this.getGeodesic_vector() + ", terms vector: " + terms_vector;
+//	}
 	public String toString() {
-		return "City name: " + name + ", country: " + country + ", geo vector: " + this.getGeodesic_vector() + ", terms vector: " + terms_vector;
+		return name + ", " + country;
 	}
-	
 	
 	
 }

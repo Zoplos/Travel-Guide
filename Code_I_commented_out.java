@@ -1,3 +1,12 @@
+import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
+
+import exceptions.AgeException;
+import main.ElderTraveller;
+import main.MiddleTraveller;
+import main.Traveller;
+import main.YoungTraveller;
+
 //IN MAIN
 		//ADDING NEW CITIES
 		City city1 = new City("Athens","gr",new int[10],new double[2]);
@@ -54,4 +63,61 @@
 		System.out.println("\nSorted similarity of each city for Young Traveller:\n");
 		for(int k = 0; k<cities.size();k++) {
 			System.out.println(cities.get(k).getSimilarity() + " " +cities.get(k).getName());
+		}
+		//Traveller Creation method for each possible age,
+				//throws exception if the age is incorrect
+				System.out.println("\nCreate new traveller? [y/n]");
+				String answer = scanner.next().toLowerCase();
+				if(answer.equals("yes")|| answer.equals("y")) {
+					System.out.println("\nPlease enter your age: ");
+					int age = scanner.nextInt();
+					if(age>=16 && age<=25) {
+						YoungTraveller newTraveller = new YoungTraveller();
+						newTraveller = (YoungTraveller) createTraveller(newTraveller);
+						travellers.add(newTraveller);
+						tester.writeJSON(travellers);
+					} else if(age>25 && age <=60) {
+						MiddleTraveller newTraveller = new MiddleTraveller();
+						newTraveller = (MiddleTraveller) createTraveller(newTraveller);
+						travellers.add(newTraveller);
+						tester.writeJSON(travellers);
+					} else if(age>60 && age<=115) {
+						ElderTraveller newTraveller = new ElderTraveller();
+						newTraveller = (ElderTraveller) createTraveller(newTraveller);
+						travellers.add(newTraveller);
+						tester.writeJSON(travellers);
+					} else throw new AgeException();
+				}	
+		private static Traveller createTraveller(Traveller traveller) {
+			Date date = new Date();
+			
+			//Information gathering
+			System.out.println("\nEnter your full name: ");
+			scanner.nextLine();
+			String name = scanner.nextLine();
+			traveller.setName(name);
+			System.out.println("\nEnter your phone number: ");
+			int phone = scanner.nextInt();
+			traveller.setPhone(phone);
+			traveller.setTimestamp(date.getTime());
+			
+			//Random generation of terms vector
+			int cafe = ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int sea = ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int museum = ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int restaurant= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int stadium= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int cinema= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int mountain= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int lake= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int river= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			int bar= ThreadLocalRandom.current().nextInt(0, 30 + 1);
+			
+			traveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
+			System.out.println("\nAdd your longitude: ");
+			double lon = scanner.nextDouble();
+			System.out.println("\nAdd your latitude: ");
+			double lat = scanner.nextDouble();
+			traveller.setGeodesic_vector(new double[] {lon,lat});
+			return traveller;
 		}
