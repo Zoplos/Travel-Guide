@@ -44,6 +44,7 @@ public class Ergasia {
 	static JFrame f;  
 	private static JPanel panel1;
 	private static JPanel panel2;
+	private static JPanel panel3;
 	
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException, SQLException {
 		
@@ -100,7 +101,7 @@ public class Ergasia {
 		System.out.println("Traveller's name : " + noDupsTrav.get(i).getName() + ", timestamp: " + noDupsTrav.get(i).getTimestamp());
 		}
 		
-		GUI(noDupsTrav,cities);
+		GUI(noDupsTrav,cities,travellers,citiesHm);
 		//Searching for a certain city || adding new to db
 		System.out.println("\nSearch for a city? [y/n]");
 		String answerCitySearch = scanner.next().toLowerCase();
@@ -286,32 +287,18 @@ public class Ergasia {
 			e.printStackTrace();
 		}
 	}
-	private static void GUI(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities) throws JsonParseException, JsonMappingException, IOException, SQLException{  
+	private static void GUI(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities,ArrayList<Traveller> travellers,HashMap<String,City> citiesHm) throws JsonParseException, JsonMappingException, IOException, SQLException{  
 	    f=new JFrame();  
-	    JTextArea textArea1=new JTextArea("main text");  
-	    textArea1.setBounds(10,30, 200,200);  
-	    
-	    JTextArea textArea2=new JTextArea("visit text");  
-	    textArea2.setBounds(10,30, 200,200);  
-	    
-	    JTextArea textArea3=new JTextArea("help text");  
-	    textArea3.setBounds(10,30, 200,200);  
-	    
-	    
 	    itemTabPanel1(noDupsTrav); 
-	    itemTabPanel2(noDupsTrav,cities);
-//	    JPanel p2=new JPanel();  
-//	    p2.add(textArea2);
-	    JPanel p3=new JPanel();
-	    p3.add(textArea3);
+	    itemTabPanel2(noDupsTrav,cities);    
+	    itemTabPanel3(noDupsTrav,cities,travellers,citiesHm);
 	    
-	    
-	    JTabbedPane tp=new JTabbedPane();  
-	    tp.setBounds(0,0,600,300);  
+	    JTabbedPane tp=new JTabbedPane();
+	    tp.setBounds(0,0,800,300);
 	    //tp.addTab("main",p1);
 	    tp.add("Traveller Creation",panel1);  
 	    tp.add("Visit",panel2);  
-	    tp.add("Add City",p3);    
+	    tp.add("Add City",panel3);    
 	    f.add(tp);  
 	    f.setSize(400,400);  
 	    f.setLayout(null);  
@@ -494,7 +481,6 @@ public class Ergasia {
 					try {
 						tester.writeJSON(travellers);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				} 				
@@ -505,22 +491,132 @@ public class Ergasia {
 	
 	public static void itemTabPanel2(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities) throws JsonParseException, JsonMappingException, IOException, SQLException {
 		panel2 = new JPanel();
-		panel2.setLayout(new GridLayout(2,2));
+		panel2.setLayout(new GridLayout(2,4));
 
 		JLabel nameLabel = new JLabel("Select Traveller: ");
 		panel2.add(nameLabel);
-
-		JComboBox<Traveller> testCombo = new JComboBox<Traveller>();
-		testCombo.setModel(new DefaultComboBoxModel<Traveller>(noDupsTrav.toArray(new Traveller[0])));
-		panel2.add(testCombo);
+				
+		JComboBox<Traveller> travCombo = new JComboBox<Traveller>();
+		travCombo.setModel(new DefaultComboBoxModel<Traveller>(noDupsTrav.toArray(new Traveller[0])));
+		panel2.add(travCombo);
 		
-		JLabel cityLabel = new JLabel("Select City: ");
+		JLabel pLabel = new JLabel("Enter p[0,1]: ");
+		panel2.add(pLabel);
+		
+		JTextField pTf = new JTextField();
+		panel2.add(pTf);
+		
+		JLabel cityLabel = new JLabel("Select up to five cities: ");
 		panel2.add(cityLabel);
 		
-		JComboBox<City> cityCombo = new JComboBox<City>();
-		cityCombo.setModel(new DefaultComboBoxModel<City>(cities.toArray(new City[0])));
-		panel2.add(cityCombo);
+		JScrollPane scrollCity = new JScrollPane();
+		JList<City> cityList = new JList<City>();
+		cityList.setModel(new DefaultComboBoxModel<City>(cities.toArray(new City[0])));
+		scrollCity.setViewportView(cityList);
+		panel2.add(scrollCity);
+		
+		JButton cityButton = new JButton("Compare Cities");
+		panel2.add(cityButton);
+		
+		JLabel result = new JLabel("Which city should you visit?");
+		panel2.add(result);
+		
+		cityButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				Traveller selectedTraveller = (Traveller) travCombo.getSelectedItem();
+				ArrayList<City> selectedCities = new ArrayList<City>();
+				selectedCities = (ArrayList<City>) cityList.getSelectedValuesList();
+				double p = Double.valueOf(pTf.getText()).doubleValue();
+				
+				result.setText("You should visit:" + selectedTraveller.compare_cities(selectedCities, p));
+
+				
+			}
+		});
 		
 	}
-	
+	public static void itemTabPanel3(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities,ArrayList<Traveller> travellers,HashMap<String,City> citiesHm) {
+		panel3 = new JPanel();
+		panel3.setLayout(new GridLayout(4,2));
+		
+		JLabel nameLabel = new JLabel("Select Traveller: ");
+		panel3.add(nameLabel);
+				
+		JComboBox<Traveller> travCombo = new JComboBox<Traveller>();
+		travCombo.setModel(new DefaultComboBoxModel<Traveller>(noDupsTrav.toArray(new Traveller[0])));
+		panel3.add(travCombo);
+		
+//		JLabel fill1 = new JLabel(" ");
+//		panel3.add(fill1);
+//		JLabel fill2 = new JLabel(" ");
+//		panel3.add(fill2);
+		
+		JLabel cityNameLabel = new JLabel("City name: ");
+		panel3.add(cityNameLabel);
+		
+		JTextField cityNameTf = new JTextField();
+		panel3.add(cityNameTf);
+		
+		JLabel cityCountryLabel = new JLabel("Country: ");
+		panel3.add(cityCountryLabel);
+		
+		JTextField cityCountryTf = new JTextField("as 'gr'");
+		panel3.add(cityCountryTf);
+		
+		JButton searchButton = new JButton("Search for city");
+		panel3.add(searchButton);
+		
+//		JLabel fill3 = new JLabel(" ");
+//		panel3.add(fill3);
+//		JLabel fill4 = new JLabel(" ");
+//		panel3.add(fill4);
+		
+		JLabel result = new JLabel("Waiting for results..");
+		panel3.add(result);
+		
+		searchButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				String cityName = cityNameTf.getText();
+				String cityCountry = cityCountryTf.getText();
+				
+				if(citiesHm.containsKey(cityName)) {
+					result.setText("City: " + cityName + " is already in the DB!");
+				} else {
+					City city = new City(cityName, cityCountry,new int[10],new double[2]);
+					try {
+						city.RetrieveData();
+					} catch (IOException | WikipediaException e1) {
+						e1.printStackTrace();
+					}
+					citiesHm.put(cityName, city);
+					cities.add(city);
+					addDataToDB(city);
+					result.setText("City: " + cityName + " added to DB!");
+				}
+				
+				long timestamp =date.getTime();
+				
+				Traveller selectedTraveller = (Traveller) travCombo.getSelectedItem();
+				if(selectedTraveller.getClass().getTypeName() == "main.YoungTraveller") {
+					YoungTraveller newTrav = new YoungTraveller();
+					newTrav = (YoungTraveller) copyTraveller(selectedTraveller,newTrav,timestamp);
+					travellers.add(newTrav);
+				} else if(selectedTraveller.getClass().getTypeName() == "main.MiddleTraveller") {
+					MiddleTraveller newTrav = new MiddleTraveller();
+					newTrav = (MiddleTraveller) copyTraveller(selectedTraveller,newTrav,timestamp);
+					travellers.add(newTrav);
+				} else if(selectedTraveller.getClass().getTypeName() == "main.ElderTraveller") {
+					ElderTraveller newTrav = new ElderTraveller();
+					newTrav = (ElderTraveller) copyTraveller(selectedTraveller,newTrav,timestamp);
+					travellers.add(newTrav);
+				}
+				try {
+					tester.writeJSON(travellers);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
 }

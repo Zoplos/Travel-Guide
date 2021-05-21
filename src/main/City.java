@@ -115,7 +115,7 @@ public class City implements Comparable<City>{
 //		return "City name: " + name + ", country: " + country + ", geo vector: " + this.getGeodesic_vector() + ", terms vector: " + terms_vector;
 //	}
 	public String toString() {
-		return name + ", " + country;
+		return name + ", " + country.toUpperCase();
 	}
 	
 	
