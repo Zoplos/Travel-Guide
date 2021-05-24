@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -121,3 +122,20 @@ import main.YoungTraveller;
 			traveller.setGeodesic_vector(new double[] {lon,lat});
 			return traveller;
 		}
+		
+		//Searching for a certain city || adding new to db
+		System.out.println("\nSearch for a city? [y/n]");
+		String answerCitySearch = scanner.next().toLowerCase();
+		if(answerCitySearch.equals("yes") || answerCitySearch.equals("y")) {
+			searchCity(travellers.get(0), citiesHm, travellers, cities);
+		}
+		
+		// Presenting travellers without duplicates sorted by their timestamp
+		System.out.println("\nNo Duplicate travellers:");
+		ArrayList<Traveller> noDupsTrav = presentTravellers(travellers);					
+		for(int i = 0; i < noDupsTrav.size();i++) {
+		System.out.println("Traveller's name : " + noDupsTrav.get(i).getName() + ", timestamp: " + noDupsTrav.get(i).getTimestamp());
+		}
+		
+		
+		

@@ -94,20 +94,9 @@ public class Ergasia {
 		Collections.sort(travellers, Traveller.simComparator);
 		System.out.println("\nFree ticket to Tokyo goes to: " + travellers.get(0).getName());
 		
-		// Presenting travellers without duplicates sorted by their timestamp
-		System.out.println("\nNo Duplicate travellers:");
-		ArrayList<Traveller> noDupsTrav = presentTravellers(travellers);					
-		for(int i = 0; i < noDupsTrav.size();i++) {
-		System.out.println("Traveller's name : " + noDupsTrav.get(i).getName() + ", timestamp: " + noDupsTrav.get(i).getTimestamp());
-		}
+		ArrayList<Traveller> noDupsTrav = presentTravellers(travellers);
 		
 		GUI(noDupsTrav,cities,travellers,citiesHm);
-		//Searching for a certain city || adding new to db
-		System.out.println("\nSearch for a city? [y/n]");
-		String answerCitySearch = scanner.next().toLowerCase();
-		if(answerCitySearch.equals("yes") || answerCitySearch.equals("y")) {
-			searchCity(travellers.get(0), citiesHm, travellers, cities);
-		}
 						
 		//System.out.println("\nTraveller timestamp after searchCity method: " + traveller.getTimestamp());
 		//presentTravellers(travellers);
@@ -287,6 +276,7 @@ public class Ergasia {
 			e.printStackTrace();
 		}
 	}
+	
 	private static void GUI(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities,ArrayList<Traveller> travellers,HashMap<String,City> citiesHm) throws JsonParseException, JsonMappingException, IOException, SQLException{  
 	    f=new JFrame();  
 	    itemTabPanel1(noDupsTrav); 
@@ -390,17 +380,16 @@ public class Ergasia {
 		JButton addBtn = new JButton("Add Traveller");
 		panel1.add(addBtn);
 		
+
 		
 		addBtn.addMouseListener(new MouseAdapter(){			
 			public void mouseClicked(MouseEvent e) {
 				int age = Integer.valueOf(ageTf.getText()).intValue();
 				if(age>=16 && age<=25) {
 					YoungTraveller newTraveller = new YoungTraveller();
+					
 					String name = nameTf.getText();
 					int phone = Integer.valueOf(phoneTf.getText()).intValue();
-					newTraveller.setName(name);
-					newTraveller.setPhone(phone);
-					newTraveller.setTimestamp(date.getTime());
 					
 					int cafe = (Integer) comboBox1.getSelectedItem();
 					int sea = (Integer) comboBox2.getSelectedItem();
@@ -413,10 +402,15 @@ public class Ergasia {
 					int river= (Integer) comboBox9.getSelectedItem();
 					int bar= (Integer) comboBox10.getSelectedItem();
 					
-					newTraveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 					double lon = Double.valueOf(lonTf.getText()).doubleValue();
 					double lat = Double.valueOf(latTf.getText()).doubleValue();
+					
+					newTraveller.setName(name);
+					newTraveller.setPhone(phone);
+					newTraveller.setTimestamp(date.getTime());
+					newTraveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 					newTraveller.setGeodesic_vector(new double[] {lon,lat});
+					
 					travellers.add(newTraveller);
 					try {
 						tester.writeJSON(travellers);
@@ -426,11 +420,9 @@ public class Ergasia {
 					}
 				} else if(age>25 && age <=60) {
 					MiddleTraveller newTraveller = new MiddleTraveller();
+					
 					String name = nameTf.getText();
 					int phone = Integer.valueOf(phoneTf.getText()).intValue();
-					newTraveller.setName(name);
-					newTraveller.setPhone(phone);
-					newTraveller.setTimestamp(date.getTime());
 					
 					int cafe = (Integer) comboBox1.getSelectedItem();
 					int sea = (Integer) comboBox2.getSelectedItem();
@@ -443,10 +435,15 @@ public class Ergasia {
 					int river= (Integer) comboBox9.getSelectedItem();
 					int bar= (Integer) comboBox10.getSelectedItem();
 					
-					newTraveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 					double lon = Double.valueOf(lonTf.getText()).doubleValue();
 					double lat = Double.valueOf(latTf.getText()).doubleValue();
+					
+					newTraveller.setName(name);
+					newTraveller.setPhone(phone);
+					newTraveller.setTimestamp(date.getTime());
+					newTraveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 					newTraveller.setGeodesic_vector(new double[] {lon,lat});
+					
 					travellers.add(newTraveller);
 					try {
 						tester.writeJSON(travellers);
@@ -456,11 +453,9 @@ public class Ergasia {
 					}
 				} else if(age>60 && age<=115) {
 					ElderTraveller newTraveller = new ElderTraveller();
+					
 					String name = nameTf.getText();
 					int phone = Integer.valueOf(phoneTf.getText()).intValue();
-					newTraveller.setName(name);
-					newTraveller.setPhone(phone);
-					newTraveller.setTimestamp(date.getTime());
 					
 					int cafe = (Integer) comboBox1.getSelectedItem();
 					int sea = (Integer) comboBox2.getSelectedItem();
@@ -473,10 +468,15 @@ public class Ergasia {
 					int river= (Integer) comboBox9.getSelectedItem();
 					int bar= (Integer) comboBox10.getSelectedItem();
 					
-					newTraveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 					double lon = Double.valueOf(lonTf.getText()).doubleValue();
 					double lat = Double.valueOf(latTf.getText()).doubleValue();
+					
+					newTraveller.setName(name);
+					newTraveller.setPhone(phone);
+					newTraveller.setTimestamp(date.getTime());
+					newTraveller.setTerms_vector(new int[] {cafe,sea,museum,restaurant,stadium,cinema,mountain,lake,river,bar});
 					newTraveller.setGeodesic_vector(new double[] {lon,lat});
+					
 					travellers.add(newTraveller);
 					try {
 						tester.writeJSON(travellers);
@@ -580,7 +580,7 @@ public class Ergasia {
 				String cityCountry = cityCountryTf.getText();
 				
 				if(citiesHm.containsKey(cityName)) {
-					result.setText("City: " + cityName + " is already in the DB!");
+					result.setText("City: " + cityName + " is already in the Database!");
 				} else {
 					City city = new City(cityName, cityCountry,new int[10],new double[2]);
 					try {
