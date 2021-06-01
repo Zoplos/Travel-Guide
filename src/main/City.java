@@ -77,7 +77,7 @@ public class City implements Comparable<City>{
 		geodesic_vector[1] = weather_obj.getCoord().getLon();
 			
 		terms_vector[0] = countCriterionfCity(article, "cafe");       //Γέμισμα πίνακα με τον int που αναλογεί στο πόσες φορές   
-		terms_vector[1] = countCriterionfCity(article, "sea");        //  βρέθηκε το criterion
+		terms_vector[1] = countCriterionfCity(article, "sea");        //βρέθηκε το criterion
 		terms_vector[2] = countCriterionfCity(article, "museum");
 		terms_vector[3] = countCriterionfCity(article, "restaurant");
 		terms_vector[4] = countCriterionfCity(article, "stadium");
@@ -118,5 +118,11 @@ public class City implements Comparable<City>{
 		return name + ", " + country.toUpperCase();
 	}
 	
-	
 }
+
+
+
+
+
+
+

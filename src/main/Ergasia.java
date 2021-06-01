@@ -247,7 +247,7 @@ public class Ergasia {
 	    return cities;
 	}
 	
-	private static void addDataToDB(City city) {
+	protected static void addDataToDB(City city) {
 		 
 		try {
 			String insertQueryStatement = "INSERT  INTO  CITIES  VALUES  (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";			
@@ -418,6 +418,7 @@ public class Ergasia {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					addBtn.setText("Added Traveller!");
 				} else if(age>25 && age <=60) {
 					MiddleTraveller newTraveller = new MiddleTraveller();
 					
@@ -451,6 +452,7 @@ public class Ergasia {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					addBtn.setText("Added Traveller!");
 				} else if(age>60 && age<=115) {
 					ElderTraveller newTraveller = new ElderTraveller();
 					
@@ -483,7 +485,11 @@ public class Ergasia {
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
+					addBtn.setText("Added Traveller!");
 				} 				
+			}
+			public void mouseExited(MouseEvent e) {
+				addBtn.setText("Add Traveller");
 			}
 		});
 		
@@ -583,14 +589,16 @@ public class Ergasia {
 					result.setText("City: " + cityName + " is already in the Database!");
 				} else {
 					City city = new City(cityName, cityCountry,new int[10],new double[2]);
-					try {
-						city.RetrieveData();
-					} catch (IOException | WikipediaException e1) {
-						e1.printStackTrace();
-					}
-					citiesHm.put(cityName, city);
-					cities.add(city);
-					addDataToDB(city);
+//					try {
+//						city.RetrieveData();
+//					} catch (IOException | WikipediaException e1) {
+//						e1.printStackTrace();
+//					}
+					RetrieveThread retrieve = new RetrieveThread(city,citiesHm,cities);
+					new Thread(retrieve).start();
+//					citiesHm.put(cityName, city);
+//					cities.add(city);
+//					addDataToDB(city);
 					result.setText("City: " + cityName + " added to DB!");
 				}
 				
@@ -620,3 +628,28 @@ public class Ergasia {
 		});
 	}
 }
+
+class RetrieveThread implements Runnable {
+	City city;
+	HashMap<String, City> citiesHm;
+	ArrayList<City> cities;
+	
+	public RetrieveThread(City c,HashMap<String,City> hm,ArrayList<City> cs) {
+		this.city = c;
+		this.citiesHm = hm;
+		this.cities = cs;
+	}
+	@Override
+	public void run() {
+		try {
+			city.RetrieveData();
+		} catch (IOException | WikipediaException e) {
+			e.printStackTrace();
+		}
+		citiesHm.put(city.getName(), city);
+		cities.add(city);
+		Ergasia.addDataToDB(city);
+	}
+}
+
+
