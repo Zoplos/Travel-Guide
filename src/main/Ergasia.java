@@ -381,7 +381,7 @@ public class Ergasia {
 		panel1.add(addBtn);
 		
 
-		
+		writeJsonThread write = new writeJsonThread(travellers);
 		addBtn.addMouseListener(new MouseAdapter(){			
 			public void mouseClicked(MouseEvent e) {
 				int age = Integer.valueOf(ageTf.getText()).intValue();
@@ -412,12 +412,9 @@ public class Ergasia {
 					newTraveller.setGeodesic_vector(new double[] {lon,lat});
 					
 					travellers.add(newTraveller);
-					try {
-						tester.writeJSON(travellers);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					
+					new Thread(write).start();
+					
 					addBtn.setText("Added Traveller!");
 				} else if(age>25 && age <=60) {
 					MiddleTraveller newTraveller = new MiddleTraveller();
@@ -446,12 +443,9 @@ public class Ergasia {
 					newTraveller.setGeodesic_vector(new double[] {lon,lat});
 					
 					travellers.add(newTraveller);
-					try {
-						tester.writeJSON(travellers);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					
+					new Thread(write).start();
+					
 					addBtn.setText("Added Traveller!");
 				} else if(age>60 && age<=115) {
 					ElderTraveller newTraveller = new ElderTraveller();
@@ -480,11 +474,9 @@ public class Ergasia {
 					newTraveller.setGeodesic_vector(new double[] {lon,lat});
 					
 					travellers.add(newTraveller);
-					try {
-						tester.writeJSON(travellers);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
+					
+					new Thread(write).start();
+					
 					addBtn.setText("Added Traveller!");
 				} 				
 			}
@@ -579,7 +571,7 @@ public class Ergasia {
 		
 		JLabel result = new JLabel("Waiting for results..");
 		panel3.add(result);
-		
+		writeJsonThread write = new writeJsonThread(travellers);
 		searchButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				String cityName = cityNameTf.getText();
@@ -618,12 +610,7 @@ public class Ergasia {
 					newTrav = (ElderTraveller) copyTraveller(selectedTraveller,newTrav,timestamp);
 					travellers.add(newTrav);
 				}
-				try {
-					tester.writeJSON(travellers);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				new Thread(write).start();
 			}
 		});
 	}
@@ -650,6 +637,25 @@ class RetrieveThread implements Runnable {
 		cities.add(city);
 		Ergasia.addDataToDB(city);
 	}
+}
+
+class writeJsonThread implements Runnable{
+	
+	ArrayList<Traveller> travellers;
+	
+	public writeJsonThread(ArrayList<Traveller> t) {
+		this.travellers = t;
+	}
+	
+	@Override
+	public void run() {
+		try {
+			Ergasia.tester.writeJSON(travellers);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
 
 
