@@ -12,10 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -45,6 +47,7 @@ public class Ergasia {
 	private static JPanel panel1;
 	private static JPanel panel2;
 	private static JPanel panel3;
+	private static JPanel panel4;
 	
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException, AgeException, SQLException {
 		
@@ -98,9 +101,11 @@ public class Ergasia {
 		
 		GUI(noDupsTrav,cities,travellers,citiesHm);
 						
-		//System.out.println("\nTraveller timestamp after searchCity method: " + traveller.getTimestamp());
-		//presentTravellers(travellers);
+		Optional<RecommendedCity> recommendedCity = 
+				noDupsTrav.stream().map(i->new RecommendedCity(i.getVisit(),innerDot(i.getTerms_vector(),noDupsTrav.get(10).getTerms_vector()))).max(Comparator.comparingInt(RecommendedCity::getRank));
 		
+		System.out.println("The recommended city is: "+recommendedCity.get().getName());
+
 	}
 		
 	public static void searchCity(Traveller traveller, HashMap<String, City> citiesHm, ArrayList<Traveller> travellers, ArrayList<City> cities) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {		
@@ -280,15 +285,17 @@ public class Ergasia {
 	private static void GUI(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities,ArrayList<Traveller> travellers,HashMap<String,City> citiesHm) throws JsonParseException, JsonMappingException, IOException, SQLException{  
 	    f=new JFrame();  
 	    itemTabPanel1(noDupsTrav); 
-	    itemTabPanel2(noDupsTrav,cities);    
+	    itemTabPanel2(noDupsTrav,cities,travellers);    
 	    itemTabPanel3(noDupsTrav,cities,travellers,citiesHm);
+	    itemTabPanel4(noDupsTrav);
 	    
 	    JTabbedPane tp=new JTabbedPane();
 	    tp.setBounds(0,0,800,300);
 	    //tp.addTab("main",p1);
 	    tp.add("Traveller Creation",panel1);  
 	    tp.add("Visit",panel2);  
-	    tp.add("Add City",panel3);    
+	    tp.add("Add City",panel3);
+	    tp.add("Collaborative Filtering",panel4);
 	    f.add(tp);  
 	    f.setSize(400,400);  
 	    f.setLayout(null);  
@@ -487,7 +494,7 @@ public class Ergasia {
 		
 	}
 	
-	public static void itemTabPanel2(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities) throws JsonParseException, JsonMappingException, IOException, SQLException {
+	public static void itemTabPanel2(ArrayList<Traveller> noDupsTrav,ArrayList<City> cities,ArrayList<Traveller> travs) throws JsonParseException, JsonMappingException, IOException, SQLException {
 		panel2 = new JPanel();
 		panel2.setLayout(new GridLayout(2,4));
 
@@ -526,8 +533,10 @@ public class Ergasia {
 				selectedCities = (ArrayList<City>) cityList.getSelectedValuesList();
 				double p = Double.valueOf(pTf.getText()).doubleValue();
 				
+				selectedTraveller.setVisit(selectedTraveller.compare_cities(selectedCities, p));
 				result.setText("You should visit:" + selectedTraveller.compare_cities(selectedCities, p));
-
+				writeJsonThread write = new writeJsonThread(travs);
+				new Thread(write).start();
 				
 			}
 		});
@@ -614,6 +623,52 @@ public class Ergasia {
 			}
 		});
 	}
+	public static void itemTabPanel4(ArrayList<Traveller> inputTravellers) {
+		panel4 = new JPanel();
+		panel4.setLayout(new GridLayout(3,2));
+		JLabel nameLabel = new JLabel("Select Traveller: ");
+		panel4.add(nameLabel);
+				
+		JComboBox<Traveller> travCombo = new JComboBox<Traveller>();
+		travCombo.setModel(new DefaultComboBoxModel<Traveller>(inputTravellers.toArray(new Traveller[0])));
+		panel4.add(travCombo);
+		
+		JLabel travLabel = new JLabel("Select Traveller: ");
+		panel4.add(travLabel);
+		
+		JScrollPane scrollTrav = new JScrollPane();
+		JList<Traveller> travList = new JList<Traveller>();
+		travList.setModel(new DefaultComboBoxModel<Traveller>(inputTravellers.toArray(new Traveller[0])));
+		scrollTrav.setViewportView(travList);
+		panel4.add(scrollTrav);
+		
+		JButton filterButton = new JButton("Filter results: ");
+		panel4.add(filterButton);
+		
+		JLabel result = new JLabel("");
+		panel4.add(result);
+		
+		filterButton.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				Traveller selectedTraveller = (Traveller) travCombo.getSelectedItem();
+				ArrayList<Traveller> selectedTravs = new ArrayList<Traveller>();
+				selectedTravs = (ArrayList<Traveller>) travList.getSelectedValuesList();
+				
+				Optional<RecommendedCity> recommendedCity = 
+						selectedTravs.stream().map(i->new RecommendedCity(i.getVisit(),innerDot(i.getTerms_vector(),selectedTraveller.getTerms_vector()))).max(Comparator.comparingInt(RecommendedCity::getRank));
+				
+				result.setText("You should visit:" + recommendedCity.get().getName());
+				
+			}
+		});
+	}
+	
+	private static int innerDot(int[] currentTraveller,int[] candidateTraveller) {
+		int sum=0;
+		for(int i=0;i<currentTraveller.length;i++)
+			sum+=currentTraveller[i]*candidateTraveller[i];
+		return sum;
+	}
 }
 
 class RetrieveThread implements Runnable {
@@ -657,5 +712,3 @@ class writeJsonThread implements Runnable{
 	}
 	
 }
-
-
