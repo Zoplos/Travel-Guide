@@ -137,5 +137,41 @@ import main.YoungTraveller;
 		System.out.println("Traveller's name : " + noDupsTrav.get(i).getName() + ", timestamp: " + noDupsTrav.get(i).getTimestamp());
 		}
 		
+//		public static void searchCity(Traveller traveller, HashMap<String, City> citiesHm, ArrayList<Traveller> travellers, ArrayList<City> cities) throws JsonParseException, JsonMappingException, MalformedURLException, IOException, WikipediaException {		
+//			System.out.println("\nEnter city name:");
+//			scanner.nextLine();
+//			String cityName = scanner.nextLine();
+//			
+//			//if city name is not a key in the hashmap, uses the api to search for the city
+//			if(citiesHm.containsKey(cityName)) {
+//				System.out.println("City: " + cityName + " exists!");
+//			} else {			
+//				System.out.println("\nWhich country is your city in?");
+//				String cityCountry = scanner.next();
+//				City city = new City(cityName, cityCountry,new int[10],new double[2]);
+//				city.RetrieveData();
+//				citiesHm.put(cityName, city);
+//				cities.add(city);
+//				addDataToDB(city);
+//			}
+//			
+//			long timestamp = date.getTime();
+//			
+//			//Creating a copy of the traveller that used the method
+//			if(traveller.getClass().getTypeName() == "main.YoungTraveller") {
+//				YoungTraveller newTrav = new YoungTraveller();
+//				newTrav = (YoungTraveller) copyTraveller(traveller,newTrav,timestamp);
+//				travellers.add(newTrav);
+//			} else if(traveller.getClass().getTypeName() == "main.MiddleTraveller") {
+//				MiddleTraveller newTrav = new MiddleTraveller();
+//				newTrav = (MiddleTraveller) copyTraveller(traveller,newTrav,timestamp);
+//				travellers.add(newTrav);
+//			} else if(traveller.getClass().getTypeName() == "main.ElderTraveller") {
+//				ElderTraveller newTrav = new ElderTraveller();
+//				newTrav = (ElderTraveller) copyTraveller(traveller,newTrav,timestamp);
+//				travellers.add(newTrav);
+//			}
+//			tester.writeJSON(travellers);
+//		}
 		
 		

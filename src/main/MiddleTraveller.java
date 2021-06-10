@@ -1,5 +1,6 @@
 package main;
 
+
 public class MiddleTraveller extends Traveller {
 
 	public MiddleTraveller(/*String name, int phone, int[] terms_vector, double[] geodesic_vector, long timestamp*/) {
@@ -37,5 +38,6 @@ public class MiddleTraveller extends Traveller {
 			return 0;
 		}		
 	}
+
 	
 }

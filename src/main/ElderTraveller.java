@@ -40,4 +40,5 @@ public class ElderTraveller extends Traveller{
 		}		
 	}
 
+
 }
