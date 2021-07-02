@@ -341,16 +341,8 @@ public static void itemTabPanel1(ArrayList<Traveller> travellers) {
 				result.setText("City: " + cityName + " is already in the Database!");
 			} else {
 				City city = new City(cityName, cityCountry,new int[10],new double[2]);
-//				try {
-//					city.RetrieveData();
-//				} catch (IOException | WikipediaException e1) {
-//					e1.printStackTrace();
-//				}
 				RetrieveThread retrieve = new RetrieveThread(city,citiesHm,cities);
 				new Thread(retrieve).start();
-//				citiesHm.put(cityName, city);
-//				cities.add(city);
-//				addDataToDB(city);
 				result.setText("City: " + cityName + " added to DB!");
 			}
 			
