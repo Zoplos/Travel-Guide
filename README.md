@@ -1,3 +1,3 @@
 # Travel Guide
 
-Assignment for one of my university courses written in Java to manage an Oracle Database and suggest possible travel locations to users.
+Java Desktop Application taht manages an Oracle Database and suggests possible travel locations to users.
